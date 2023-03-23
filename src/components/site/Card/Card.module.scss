@@ -70,7 +70,7 @@
   cursor: pointer;
   color: #3f51b5;
   padding: 5px;
-  &:last-child {
+  &:not(:first-child) {
     border-top: 1px solid #3f51b5;
   }
 
@@ -116,6 +116,7 @@
   margin-right: 10px;
 }
 .avatarEmpty {
+  position: relative;
   display: block;
   width: 30px;
   height: 30px;

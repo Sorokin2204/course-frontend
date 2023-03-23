@@ -116,8 +116,9 @@ const AccountSettings = () => {
               color="error"
               endIcon={<Delete />}
               onClick={() => {
-                setIsDeleteAvatar(true);
-                setUploadAvatar(null);
+                console.error('[ERROR] Upload avatar...');
+                // setIsDeleteAvatar(true);
+                // setUploadAvatar(null);
               }}>
               Удалить фото
             </Button>
@@ -126,7 +127,7 @@ const AccountSettings = () => {
       </Box>{' '}
       <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gridGap: '20px' }}>
         <Controller name="name" control={control} rules={{ required: true }} render={({ field }) => <TextField InputLabelProps={{ shrink: true }} sx={{ mb: 2 }} size="small" error={errors?.name} label={'Имя'} helperText={errors?.name && 'Заполните поле'} {...field} />} />
-        <Controller name="surname" control={control} rules={{ required: true }} render={({ field }) => <TextField InputLabelProps={{ shrink: true }} sx={{ mb: 2 }} size="small" error={errors?.surname} label={'Фамилия'} helperText={errors?.surname && 'Заполните поле'} {...field} />} />{' '}
+        <Controller name="surname" control={control} rules={{ required: false }} render={({ field }) => <TextField InputLabelProps={{ shrink: true }} sx={{ mb: 2 }} size="small" error={errors?.surname} label={'Фамилия'} helperText={errors?.surname && 'Заполните поле'} {...field} />} />{' '}
         <Controller
           name="phone"
           control={control}

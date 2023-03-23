@@ -13,12 +13,11 @@ const CategoryPage = () => {
   useEffect(() => {
     if (id) {
       axios
-        .get(apiUrl(`category/${id}`))
+        .get(apiUrl(`category-single/${id}`))
         .then((res) => {
           setActiveCategory(res.data);
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
     }
   }, [id]);
 

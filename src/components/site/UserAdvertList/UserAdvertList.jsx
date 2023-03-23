@@ -110,7 +110,7 @@ const UserAdvertList = () => {
                 date={itemAdvert?.createdAt}
                 name={itemAdvert?.title}
                 inAccount
-                onlyView={activeTab !== 'publish'}
+                onlyView={activeTab !== 'publish' && auth?.data?.role !== 'admin'}
               />
             ))}
 

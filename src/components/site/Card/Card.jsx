@@ -1,4 +1,4 @@
-import { Camera, MoreVert, PhotoCamera } from '@mui/icons-material';
+import { Camera, MoreVert, Person, PhotoCamera } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import axios from 'axios';
 import clsx from 'clsx';
@@ -12,7 +12,7 @@ import InfoAlert from '../../admin/InfoAlert/InfoAlert';
 import { AuthContext } from '../SiteLayout/SiteLayout';
 import styles from './Card.module.scss';
 const Card = ({ onChangeStatus, id, img, category, name, user, date, inAccount = false, price = 0, onlyView = false }) => {
-  const { checkAuth } = useContext(AuthContext);
+  const { checkAuth, auth } = useContext(AuthContext);
   const [showSettings, setShowSettings] = useState(false);
   const [changeStatus, setChangeStatus] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
@@ -69,24 +69,63 @@ const Card = ({ onChangeStatus, id, img, category, name, user, date, inAccount =
               <MoreVert />
             </button>
             {showSettings && (
-              <div className={clsx(styles.settingMenu)}>
-                <div
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    changeStatusRequest('disabled', id);
-                  }}
-                  className={styles.settingItem}>
-                  Снять с продажи
-                </div>
-                <div
-                  className={styles.settingItem}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    changeStatusRequest('sold', id);
-                  }}>
-                  Ура продал!
-                </div>
-              </div>
+              <>
+                {auth?.data?.role == 'admin' ? (
+                  <div className={clsx(styles.settingMenu)}>
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        changeStatusRequest('publish', id);
+                      }}
+                      className={styles.settingItem}>
+                      Активно
+                    </div>
+                    <div
+                      className={styles.settingItem}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        changeStatusRequest('disabled', id);
+                      }}>
+                      Не активно
+                    </div>
+                    <div
+                      className={styles.settingItem}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        changeStatusRequest('canceled', id);
+                      }}>
+                      Откланенно
+                    </div>
+                    <div
+                      className={styles.settingItem}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        changeStatusRequest('sold', id);
+                      }}>
+                      Проданно
+                    </div>
+                  </div>
+                ) : (
+                  <div className={clsx(styles.settingMenu)}>
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        changeStatusRequest('disabled', id);
+                      }}
+                      className={styles.settingItem}>
+                      Снять с продажи
+                    </div>
+                    <div
+                      className={styles.settingItem}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        changeStatusRequest('sold', id);
+                      }}>
+                      Ура продал!
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </OutsideClickHandler>
@@ -97,7 +136,13 @@ const Card = ({ onChangeStatus, id, img, category, name, user, date, inAccount =
       </div>
       {!inAccount && (
         <div className={styles.user}>
-          {user.avatar ? <img src={`${process.env.REACT_APP_SERVER_URL}/${user.avatar}`} className={styles.avatar} /> : <div className={styles.avatarEmpty}></div>}
+          {user.avatar ? (
+            <img src={`${process.env.REACT_APP_SERVER_URL}/${user.avatar}`} className={styles.avatar} />
+          ) : (
+            <div className={styles.avatarEmpty}>
+              <Person sx={{ fontSize: '18px', opacity: '0.6', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }} />
+            </div>
+          )}
 
           <div className={styles.username}>{user.name}</div>
         </div>

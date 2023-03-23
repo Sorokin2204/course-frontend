@@ -9,7 +9,7 @@ import ListCard from '../../components/site/ListCard/ListCard';
 import ProductGallery from '../../components/site/ProductGallery/ProductGallery';
 import { currencyFormat } from '../../utils/currencyFormat';
 import { Box, Button } from '@mui/material';
-import { Phone, PhotoCamera } from '@mui/icons-material';
+import { Person, Phone, PhotoCamera } from '@mui/icons-material';
 import axios from 'axios';
 import { apiUrl } from '../../utils/apiUrl';
 import moment from 'moment';
@@ -76,7 +76,14 @@ const SingleAdvertPage = () => {
                 )}
 
                 <div className={clsx(styles.user)}>
-                  <img src={`${process.env.REACT_APP_SERVER_URL}/${getSingleAdvert?.data?.user?.avatar}`} alt="" className={clsx(styles.avatar)} />
+                  {getSingleAdvert?.data?.user?.avatar ? (
+                    <img src={`${process.env.REACT_APP_SERVER_URL}/${getSingleAdvert?.data?.user?.avatar}`} alt="" className={clsx(styles.avatar)} />
+                  ) : (
+                    <div style={{ background: 'rgba(0,0,0,0.1)' }} className={clsx(styles.avatar)}>
+                      <Person sx={{ fontSize: '34px', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', opacity: '0.6' }} />
+                    </div>
+                  )}
+
                   <div className={clsx(styles.userInfo)}>
                     <div className={clsx(styles.userName)}>{getSingleAdvert?.data?.user?.name}</div>
                     <div className={clsx(styles.userAdvertCount)}>{`Объявлений: ${getSingleAdvert?.data?.countAdvert}`}</div>
