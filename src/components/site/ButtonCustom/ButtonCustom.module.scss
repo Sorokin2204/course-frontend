@@ -1,0 +1,31 @@
+.btn {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #ffffff;
+  background: #4282e1;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid #4282e1;
+  outline: none;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px 20px;
+}
+
+.large {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 30px;
+  height: 60px;
+  width: 100%;
+  border-radius: 10px;
+}
+.error {
+  color: #eb5757;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+}

@@ -1,15 +1,19 @@
 import React, { createContext, useEffect, useState } from 'react';
-import Footer from '../Footer/Footer';
-import Header from '../Header/Header';
 import styles from './SiteLayout.module.scss';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router';
 import { apiUrl } from '../../../utils/apiUrl';
 import Loading from '../Loading/Loading';
+import SideBar from '../SideBar/SideBar';
+import { Box } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { authUser } from '../../../redux/actions/user/authUser';
 
 export const AuthContext = createContext(null);
 const SiteLayout = ({ children }) => {
+  const dispatch = useDispatch();
   const darkTheme = createTheme({
     components: {
       MuiOutlinedInput: {
@@ -81,50 +85,48 @@ const SiteLayout = ({ children }) => {
       // values: { xs: 0, mobile: 1000, mob: 600 },
     },
   });
+  const {
+    authUser: { data: authUserData, error: authUserError, loading: authUserLoading },
+  } = useSelector((state) => state.user);
   const [auth, setAuth] = useState(null);
   const navigate = useNavigate();
   const { pathname } = useLocation();
   useEffect(() => {
-    checkAuth();
+    // dispatch(authUser());
   }, []);
   useEffect(() => {
-    if (pathname == '/account' || pathname == '/item/add' || pathname.substring(0, 10) == '/item/edit') {
-      checkAuth();
+    if (pathname == '/dashboard' || pathname == '/item/add' || pathname.substring(0, 10) == '/item/edit') {
+      dispatch(authUser());
     }
   }, [pathname]);
   console.log(pathname);
-  function checkAuth() {
-    axios
-      .get(apiUrl('auth'), { headers: { 'auth-token': localStorage.getItem('token') } })
-      .then((res) => {
-        setAuth({ loading: false, data: res.data });
-      })
-      .catch((err) => {
-        localStorage.removeItem('token');
-        setAuth({ loading: false, data: null, error: true });
-        if (pathname == '/account' || pathname == '/item/add' || pathname.substring(0, 10) == '/item/edit') {
-          navigate('/login');
-        }
-      });
-  }
+  // function checkAuth() {
+  //   axios
+  //     .get(apiUrl('auth'), { headers: { 'auth-token': localStorage.getItem('token') } })
+  //     .then((res) => {
+  //       setAuth({ loading: false, data: res.data });
+  //     })
+  //     .catch((err) => {
+  //       setAuth({ loading: false, data: null, error: true });
+  //     });
+  // }
+  useEffect(() => {
+    if (authUserError && !authUserLoading) {
+      localStorage.removeItem('token');
+      if (pathname == '/dashboard' || pathname == '/item/add' || pathname.substring(0, 10) == '/item/edit') {
+        navigate('/');
+      }
+    }
+  }, [authUserError]);
+
   return (
     <>
-      <AuthContext.Provider value={{ auth, checkAuth }}>
+      <AuthContext.Provider value={{ auth }}>
         <ThemeProvider theme={darkTheme}>
-          <div class={styles.wrapper}>
-            <Header />
-            {pathname != '/account' || pathname != '/item/add' || pathname.substring(0, 10) == '/item/edit' ? (
-              <div>{children}</div>
-            ) : auth?.data ? (
-              <div>{children}</div>
-            ) : (
-              <div>
-                <Loading style={{ top: '47%', left: ' 50%' }} />{' '}
-              </div>
-            )}
-
-            <Footer />
-          </div>{' '}
+          <Box sx={{ width: '100vw', display: 'grid', gridTemplateColumns: '375px 1fr', minHeight: '100vh', justifyContent: 'stretch' }}>
+            <SideBar />
+            <Box sx={{ padding: '38px 28px 35px 28px', background: '#FBFBFB' }}>{pathname != '/dashboard' || pathname != '/item/add' || pathname.substring(0, 10) == '/item/edit' ? <div>{children}</div> : auth ? <div>{children}</div> : <div></div>}</Box>
+          </Box>
         </ThemeProvider>
       </AuthContext.Provider>
     </>
