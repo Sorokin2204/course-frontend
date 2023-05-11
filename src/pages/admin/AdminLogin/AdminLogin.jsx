@@ -114,13 +114,13 @@ const AdminLogin = () => {
               Сіздің бизнесіңізге <br /> арналған аудит <br /> инструменттері
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <img src="img/avatar-1.png" style={{ zIndex: '5', display: 'block', width: '79px', height: '79px', objectFit: 'cover', borderRadius: '50%', border: '5px solid #EB5757' }} />
-              <img src="img/avatar-2.png" style={{ zIndex: '4', marginLeft: '-20px', display: 'block', width: '79px', height: '79px', objectFit: 'cover', borderRadius: '50%', border: '5px solid #EB5757' }} />
-              <img src="img/avatar-3.png" style={{ zIndex: '3', marginLeft: '-20px', display: 'block', width: '79px', height: '79px', objectFit: 'cover', borderRadius: '50%', border: '5px solid #EB5757' }} />
-              <img src="img/avatar-4.png" style={{ zIndex: '2', marginLeft: '-20px', display: 'block', width: '79px', height: '79px', objectFit: 'cover', borderRadius: '50%', border: '5px solid #EB5757' }} />
-              <img src="img/avatar-5.png" style={{ zIndex: '1', marginLeft: '-20px', display: 'block', width: '79px', height: '79px', objectFit: 'cover', borderRadius: '50%', border: '5px solid #EB5757' }} />
-              <img src="img/plus.svg" style={{ margin: '0 10px', display: 'block', width: '48px', height: '42px', objectFit: 'contain' }} />
-              <img src="img/bonus.svg" style={{ display: 'block', width: '79px', height: '79px', objectFit: 'cover', borderRadius: '50%' }} />
+              <img src="/img/avatar-1.png" style={{ zIndex: '5', display: 'block', width: '79px', height: '79px', objectFit: 'cover', borderRadius: '50%', border: '5px solid #EB5757' }} />
+              <img src="/img/avatar-2.png" style={{ zIndex: '4', marginLeft: '-20px', display: 'block', width: '79px', height: '79px', objectFit: 'cover', borderRadius: '50%', border: '5px solid #EB5757' }} />
+              <img src="/img/avatar-3.png" style={{ zIndex: '3', marginLeft: '-20px', display: 'block', width: '79px', height: '79px', objectFit: 'cover', borderRadius: '50%', border: '5px solid #EB5757' }} />
+              <img src="/img/avatar-4.png" style={{ zIndex: '2', marginLeft: '-20px', display: 'block', width: '79px', height: '79px', objectFit: 'cover', borderRadius: '50%', border: '5px solid #EB5757' }} />
+              <img src="/img/avatar-5.png" style={{ zIndex: '1', marginLeft: '-20px', display: 'block', width: '79px', height: '79px', objectFit: 'cover', borderRadius: '50%', border: '5px solid #EB5757' }} />
+              <img src="/img/plus.svg" style={{ margin: '0 10px', display: 'block', width: '48px', height: '42px', objectFit: 'contain' }} />
+              <img src="/img/bonus.svg" style={{ display: 'block', width: '79px', height: '79px', objectFit: 'cover', borderRadius: '50%' }} />
             </Box>
           </Box>
           <Box sx={{ zIndex: '1', display: 'flex', flexDirection: 'column', alignItems: 'start', margin: '0 auto', position: 'relative', width: '100%', backgroundColor: '#fff', borderRadius: '15px', justifyContent: 'start', padding: '50px 27px 60px 27px' }}>

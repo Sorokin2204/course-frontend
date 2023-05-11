@@ -44,7 +44,7 @@ const DashboardSide = () => {
             justifyContent: 'center',
             position: 'relative',
           }}>
-          <img src="img/add.svg" style={{ width: '18px' }} />
+          <img src="/img/add.svg" style={{ width: '18px' }} />
         </Box>
       )}
       <Box sx={{ marginTop: '14px', textAlign: 'center', fontSize: '20px', lineHeight: '30px', fontWeight: '600' }}>{`${auth?.name} ${auth?.surname}`}</Box>
@@ -66,15 +66,15 @@ const DashboardSide = () => {
       <Box sx={{ marginBottom: '12px', marginTop: '50px', fontSize: '16px', lineHeight: '24px', alignSelf: 'start' }}>Поддержка:</Box>
       <Box sx={{ alignSelf: 'stretch' }}>
         <Box sx={{ border: '1px solid #E0E0E0', borderRadius: '8px', display: 'grid', gridTemplateColumns: 'auto 1fr auto', padding: '8px 16px', alignItems: 'center' }}>
-          <img src="img/headset.svg" />
+          <img src="/img/headset.svg" />
           <Box sx={{ marginLeft: '12px' }}>Поддержка</Box> <ArrowBackIos sx={{ transform: 'rotate(180deg)', color: '#828282', fontSize: '14px' }} />
         </Box>
         <Box sx={{ marginTop: '5px', border: '1px solid #E0E0E0', borderRadius: '8px', display: 'grid', gridTemplateColumns: 'auto 1fr auto', padding: '8px 16px', alignItems: 'center' }}>
-          <img src="img/group.svg" />
+          <img src="/img/group.svg" />
           <Box sx={{ marginLeft: '12px' }}>Достарыңды шақыр</Box> <ArrowBackIos sx={{ transform: 'rotate(180deg)', color: '#828282', fontSize: '14px' }} />
         </Box>
         <Box sx={{ marginTop: '5px', border: '1px solid #E0E0E0', borderRadius: '8px', display: 'grid', gridTemplateColumns: 'auto 1fr auto', padding: '8px 16px', alignItems: 'center' }}>
-          <img src="img/delete.svg" />
+          <img src="/img/delete.svg" />
           <Box sx={{ marginLeft: '12px' }}>Аккаунтты жою</Box>
           <ArrowBackIos sx={{ transform: 'rotate(180deg)', color: '#828282', fontSize: '14px' }} />
         </Box>

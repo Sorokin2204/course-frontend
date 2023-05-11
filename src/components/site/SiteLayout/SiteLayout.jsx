@@ -10,6 +10,7 @@ import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { authUser } from '../../../redux/actions/user/authUser';
+import { resetAuthUser } from '../../../redux/slices/user.slice';
 
 export const AuthContext = createContext(null);
 const SiteLayout = ({ children }) => {
@@ -95,10 +96,14 @@ const SiteLayout = ({ children }) => {
     // dispatch(authUser());
   }, []);
   useEffect(() => {
-    if (pathname == '/dashboard' || pathname == '/item/add' || pathname.substring(0, 10) == '/item/edit') {
-      dispatch(authUser());
-    }
-  }, [pathname]);
+    dispatch(authUser());
+  }, []);
+  // useEffect(() => {
+  //   if (authUserError) {
+  //     navigate('/');
+  //   }
+  // }, [authUserError]);
+
   console.log(pathname);
   // function checkAuth() {
   //   axios
@@ -113,22 +118,19 @@ const SiteLayout = ({ children }) => {
   useEffect(() => {
     if (authUserError && !authUserLoading) {
       localStorage.removeItem('token');
-      if (pathname == '/dashboard' || pathname == '/item/add' || pathname.substring(0, 10) == '/item/edit') {
-        navigate('/');
-      }
+      dispatch(resetAuthUser());
+      navigate('/');
     }
   }, [authUserError]);
 
   return (
     <>
-      <AuthContext.Provider value={{ auth }}>
-        <ThemeProvider theme={darkTheme}>
-          <Box sx={{ width: '100vw', display: 'grid', gridTemplateColumns: '375px 1fr', minHeight: '100vh', justifyContent: 'stretch' }}>
-            <SideBar />
-            <Box sx={{ padding: '38px 28px 35px 28px', background: '#FBFBFB' }}>{pathname != '/dashboard' || pathname != '/item/add' || pathname.substring(0, 10) == '/item/edit' ? <div>{children}</div> : auth ? <div>{children}</div> : <div></div>}</Box>
-          </Box>
-        </ThemeProvider>
-      </AuthContext.Provider>
+      <ThemeProvider theme={darkTheme}>
+        <Box sx={{ width: '100vw', display: 'grid', gridTemplateColumns: '375px 1fr', minHeight: '100vh', justifyContent: 'stretch' }}>
+          <SideBar />
+          <Box sx={{ padding: '38px 28px 35px 28px', background: '#FBFBFB' }}>{authUserData ? <div>{children}</div> : <div></div>}</Box>
+        </Box>
+      </ThemeProvider>
     </>
   );
 };

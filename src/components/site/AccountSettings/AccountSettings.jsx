@@ -143,7 +143,7 @@ const AccountSettings = () => {
                   justifyContent: 'center',
                   position: 'relative',
                 }}>
-                <img src="img/add.svg" sx={{ opacity: '0.4', fontSize: '24px' }} />
+                <img src="/img/add.svg" sx={{ opacity: '0.4', fontSize: '24px' }} />
               </Box>
             )}
             <Box
@@ -151,7 +151,7 @@ const AccountSettings = () => {
               onClick={() => {
                 uploadInputRef.current.click();
               }}>
-              <img src="img/photo.svg" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }} />
+              <img src="/img/photo.svg" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }} />
             </Box>
           </Box>
 

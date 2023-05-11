@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
 import { authUser } from '../../../redux/actions/user/authUser';
 import { useDispatch } from 'react-redux';
+import { resetAuthUser } from '../../../redux/slices/user.slice';
 const SideBar = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -26,8 +27,8 @@ const SideBar = () => {
       }}>
       {' '}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '30px' }}>
-        <img src="img/logo.svg" style={{ width: '121px' }} />
-        <img src="img/global.svg" style={{ width: '20px' }} />
+        <img src="/img/logo.svg" style={{ width: '121px' }} />
+        <img src="/img/global.svg" style={{ width: '20px' }} />
       </Box>
       <Box>
         <SideMenuItem
@@ -47,10 +48,10 @@ const SideBar = () => {
           Инструменттер
         </SideMenuItem>
         <SideMenuItem
-          active={pathname == '/list'}
+          active={pathname == '/list-2'}
           icon={'img/bookmark.svg'}
           onClick={() => {
-            navigate('/list');
+            navigate('/list-2');
           }}>
           Менің инструменттерім
         </SideMenuItem>
@@ -91,7 +92,7 @@ const SideBar = () => {
               justifyContent: 'center',
               position: 'relative',
             }}>
-            <img src="img/add.svg" style={{ width: '18px' }} />
+            <img src="/img/add.svg" style={{ width: '18px' }} />
           </Box>
         )}
         <Box sx={{ overflow: 'hidden' }}>
@@ -102,9 +103,10 @@ const SideBar = () => {
           sx={{ cursor: 'pointer' }}
           onClick={() => {
             localStorage.removeItem('token');
-            dispatch(authUser());
+            navigate('/');
+            // dispatch(authUser());
           }}>
-          <img src="img/exit.svg" />
+          <img src="/img/exit.svg" />
         </Box>
       </Box>
     </Box>

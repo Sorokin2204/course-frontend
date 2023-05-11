@@ -15,6 +15,9 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    resetAuthUser(state) {
+      state.authUser = initStateAuthUser.authUser;
+    },
     resetCreateUser(state) {
       state.createUser = initStateCreateUser.createUser;
     },
@@ -32,5 +35,5 @@ export const userSlice = createSlice({
     ...reducerUpdateUser,
   },
 });
-export const { resetCreateUser, resetLoginUser, resetUpdateUser } = userSlice.actions;
+export const { resetCreateUser, resetLoginUser, resetUpdateUser, resetAuthUser } = userSlice.actions;
 export const userReducer = userSlice.reducer;

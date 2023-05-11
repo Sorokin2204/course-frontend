@@ -19,6 +19,7 @@ export const authUser = createAsyncThunk('user/authUser', async (data, { rejectW
 export const reducerAuthUser = {
   [authUser.pending]: (state) => {
     state.authUser.loading = true;
+    state.authUser.error = null;
   },
   [authUser.fulfilled]: (state, action) => {
     state.authUser.loading = false;

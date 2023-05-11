@@ -5,6 +5,9 @@ import AdminLogin from './pages/admin/AdminLogin/AdminLogin';
 import AccountPage from './pages/site/AccountPage';
 
 import HomePage from './pages/site/HomePage';
+import CourseList from './pages/site/CourseList';
+import CourseSingle from './pages/site/CourseSingle';
+import CourseStart from './pages/site/CourseStart';
 
 function App() {
   let routes = useRoutes([
@@ -29,7 +32,23 @@ function App() {
       path: '/list',
       element: (
         <SiteLayout>
-          <div></div>
+          <CourseList />
+        </SiteLayout>
+      ),
+    },
+    {
+      path: '/list/audit',
+      element: (
+        <SiteLayout>
+          <CourseSingle />
+        </SiteLayout>
+      ),
+    },
+    {
+      path: '/list/audit/start',
+      element: (
+        <SiteLayout>
+          <CourseStart />
         </SiteLayout>
       ),
     },
