@@ -89,6 +89,7 @@ const SiteLayout = ({ children }) => {
   const {
     authUser: { data: authUserData, error: authUserError, loading: authUserLoading },
   } = useSelector((state) => state.user);
+
   const [auth, setAuth] = useState(null);
   const navigate = useNavigate();
   const { pathname } = useLocation();

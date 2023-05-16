@@ -304,10 +304,14 @@ a {
 } */
 .input-lable {
   font-weight: 400;
-  font-size: 20px;
+  font-size: 16px;
+  line-height: 24px;
+  color: #828282;
+  margin-bottom: 5px;
+  /* font-size: 20px;
   line-height: 30px;
   color: #000000;
-  margin-bottom: 8px;
+  margin-bottom: 8px; */
 }
 .input-custom {
   height: 38px;

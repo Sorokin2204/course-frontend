@@ -2,10 +2,10 @@ import { Box } from '@mui/material';
 import InputCustom from './InputCustom/InputCustom';
 import RatingBlock from './RatingBlock';
 
-export const getTypeComponents = ({ valueStatus, status, fields, title, name, type, value, avatar }, form, index, activeIndex) => {
+export const getTypeComponents = ({ valueStatus, status, fields, title, name, type, value, avatar }, form, activeSteps, activeIndex, index) => {
   switch (type) {
     case 'title':
-      return <Box sx={{ fontWeight: '600' }}>{value}</Box>;
+      return <Box sx={{ fontWeight: '600', fontSize: '16px' }}>{value}</Box>;
     case 'chat':
     case 'chat-self': {
       let statusValue = status?.(form);
@@ -41,6 +41,7 @@ export const getTypeComponents = ({ valueStatus, status, fields, title, name, ty
         </Box>
       );
     }
+
     case 'inputs': {
       return (
         <Box sx={{ marginTop: '40px', padding: '24px 24px 32px 24px', borderRadius: '12px', border: '1px solid rgba(66, 130, 225, 0.15)' }}>
@@ -50,13 +51,17 @@ export const getTypeComponents = ({ valueStatus, status, fields, title, name, ty
             {fields?.map((itemField) => (
               <>
                 <InputCustom
-                  // disabled={activeIndex != index + 1}
-                  disabled={false}
+                  errorText={form?.formState?.errors?.[itemField?.name]?.message}
+                  styleLabel={{ marginTop: '15px' }}
+                  rules={activeSteps ? { required: { value: true, message: itemField?.type == 'radio' ? 'Выберите вариант' : 'Заполните поле' } } : { required: false }}
+                  disabled={activeIndex != index + 1}
+                  options={itemField?.options || []}
                   isPrice={itemField?.isPrice}
                   radioList={itemField?.list}
                   isNumber={itemField?.type == 'number'}
                   isEmail={itemField?.type == 'email'}
                   isRadio={itemField?.type == 'radio'}
+                  isSelect={itemField?.type == 'select'}
                   control={form?.control}
                   label={itemField?.label}
                   form={form}

@@ -10,6 +10,11 @@ import AnimateHeight from 'react-animate-height';
 import { useForm } from 'react-hook-form';
 import { useRef } from 'react';
 import Result from '../../components/site/Result';
+import { setActiveChapter } from '../../redux/slices/app.slice';
+import { getNameBusiness } from '../../redux/actions/data/getNameBusiness';
+import { getTypeBusiness } from '../../redux/actions/data/getTypeBusiness';
+import { getTypeOfSale } from '../../redux/actions/data/getTypeOfSale';
+import { getWhereSale } from '../../redux/actions/data/getWhereSale';
 const duration = 300;
 
 const defaultStyle = {
@@ -24,7 +29,7 @@ const transitionStyles = {
   exited: { opacity: 0 },
 };
 
-const dataStep = [
+const dataStepDefault = [
   { type: 'title', value: 'Сіз Бахтиярға күннің жұмыс жоспарын білу үшін хабарлама жібересіз.' },
   {
     type: 'chat-self',
@@ -92,11 +97,20 @@ const dataStep = [
       {
         label: 'Выберите вид бизнеса',
         name: 'choiceBusiness',
-        type: 'radio',
-        list: [
-          { value: 'service', label: 'Услуга' },
-          { value: 'products', label: 'Товарка' },
-        ],
+        type: 'select',
+        options: [],
+      },
+      {
+        label: 'Выберите вид продажи',
+        name: 'typeOfSale',
+        type: 'select',
+        options: [],
+      },
+      {
+        label: 'Выберите где продаете',
+        name: 'whereSale',
+        type: 'select',
+        options: [],
       },
     ],
   },
@@ -141,6 +155,7 @@ const dataStep = [
   },
 
   {
+    chapter: 'Айналым(обороты)',
     type: 'inputs',
     title: <>Айналымды сандарға енгізіңіз</>,
     fields: [
@@ -165,6 +180,7 @@ const dataStep = [
     type: 'video',
   },
   {
+    chapter: 'Үстеме(наценка)',
     type: 'inputs',
     title: <>Сіз өзіңіздің бағаңызды білесіз бе?</>,
     fields: [
@@ -231,6 +247,7 @@ const dataStep = [
     value: <>Егер сіз білсеңіз, қажетті ақпаратты енгізіңіз.</>,
   },
   {
+    chapter: 'Үстеме(наценка)',
     type: 'inputs',
     title: <>Тауардың қалдығы</>,
     fields: [
@@ -291,6 +308,7 @@ const dataStep = [
   },
 
   {
+    chapter: 'Оптовиктердің/поставщиктердің алдындағы қарыз(долг перед постащиками)',
     type: 'inputs',
     title: <>Жеткізушілер алдындағы қарыз</>,
     fields: [
@@ -340,6 +358,7 @@ const dataStep = [
   },
 
   {
+    chapter: 'Маркетинг',
     type: 'inputs',
     title: <>Маркетинг пен жарнамаға айына қанша ақша жұмсайтыныңызды жазыңыз</>,
     fields: [
@@ -508,6 +527,7 @@ const dataStep = [
   },
 
   {
+    chapter: 'Сіздің командаңыздың жалақысы',
     type: 'inputs',
     title: <>Сіздің командаңыздың жалақысы қандай?</>,
     fields: [
@@ -524,6 +544,7 @@ const dataStep = [
     ],
   },
   {
+    chapter: 'Команда бонустары',
     type: 'inputs',
     title: <>Бонустар</>,
     fields: [
@@ -538,6 +559,7 @@ const dataStep = [
         type: 'number',
       },
       {
+        chapter: 'Таза пайда',
         label: 'Бір жылдағы ең жақсы нәтижелер',
         name: 'countBestResultPeople',
         type: 'number',
@@ -702,8 +724,18 @@ const result = [
 ];
 
 const CourseStart = () => {
+  const {
+    activeChapter,
+    getNameBusiness: { data: getNameBusinessData },
+    getTypeBusiness: { data: getTypeBusinessData },
+    getTypeOfSale: { data: getTypeOfSaleData },
+    getWhereSale: { data: getWhereSaleData },
+  } = useSelector((state) => state.app);
+  const dispatch = useDispatch();
   const pageForm = useForm();
+  console.log(pageForm.getValues());
   const [dataResult, setDataResult] = useState({});
+  const [dataStep, setDataStep] = useState(dataStepDefault);
   const calcData = () => {
     // const turnover = pageForm.getValues('turnover');
     // const margin = pageForm.getValues('margin');
@@ -732,11 +764,46 @@ const CourseStart = () => {
     return pageForm.getValues();
   };
   const myRef = useRef(null);
-
+  console.log(pageForm.formState.errors);
   const [activeStep, setActiveStep] = useState(2);
+  const onSubmit = () => {
+    setTimeout(() => {
+      myRef.current.scrollIntoView({ behavior: 'smooth' });
+    }, 500);
+    let nextStep = activeStep + 1;
+    if (dataStep[nextStep]?.chapter) {
+      nextStep++;
+      dispatch(setActiveChapter(activeChapter + 1));
+    }
+
+    setActiveStep(nextStep);
+    calcData();
+  };
+  useEffect(() => {
+    dispatch(getNameBusiness());
+    dispatch(getTypeBusiness());
+    dispatch(getTypeOfSale());
+    dispatch(getWhereSale());
+  }, []);
+  useEffect(() => {
+    if (getNameBusinessData && getTypeBusinessData && getTypeOfSaleData && getWhereSaleData) {
+      let dataStepUpdate = dataStep;
+      dataStepUpdate[4].fields[7].options = getTypeBusinessData?.map((itemTypeBusiness) => ({
+        label: itemTypeBusiness?.name,
+        options: getNameBusinessData?.filter((itemNameBusiness) => itemNameBusiness?.typeBusinessId == itemTypeBusiness?.id)?.map((itemNameBusiness) => ({ value: itemNameBusiness?.id, label: itemNameBusiness?.name })),
+      }));
+      dataStepUpdate[4].fields[8].options = getTypeOfSaleData?.map((itemTypeOfSale) => ({ value: itemTypeOfSale?.id, label: itemTypeOfSale?.name }));
+      dataStepUpdate[4].fields[9].options = [
+        { label: 'Онлайн', options: getWhereSaleData?.filter((itemWhereSale) => itemWhereSale?.isOnline)?.map((itemWhereSale) => ({ label: itemWhereSale?.name, value: itemWhereSale?.id })) },
+        { label: 'Оффлайн', options: getWhereSaleData?.filter((itemWhereSale) => !itemWhereSale?.isOnline)?.map((itemWhereSale) => ({ label: itemWhereSale?.name, value: itemWhereSale?.id })) },
+      ];
+      setDataStep(dataStepUpdate);
+      console.log(dataStepUpdate);
+    }
+  }, [getNameBusinessData, getTypeBusinessData, getTypeOfSaleData, getWhereSaleData]);
 
   return (
-    <Box sx={{}}>
+    <Box sx={{ paddingBottom: '44px', marginBottom: '40px' }}>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Box sx={{ fontWeight: '600', fontSize: '24px', marginRight: '25px' }}>Аудит бизнеса</Box>
         <Box sx={{ display: 'flex', alignItems: 'center', color: '#4282E1' }}>
@@ -757,24 +824,16 @@ const CourseStart = () => {
               visibility: itemIndex < activeStep ? 'visible' : 'hidden',
             }}>
             <AnimateHeight duration={400} height={itemIndex < activeStep ? 'auto' : 0}>
-              <div> {getTypeComponents(item, pageForm, itemIndex, activeStep)}</div>
+              <div> {getTypeComponents(item, pageForm, itemIndex < activeStep, activeStep, itemIndex)}</div>
             </AnimateHeight>
           </div>
         );
       })}
-      <button
-        style={{ border: 'none', color: '#fff', background: '#4282E1', borderRadius: '5px', height: '44px', width: '100%', fontSize: '16px', cursor: 'pointer', marginTop: '40px' }}
-        ref={myRef}
-        onClick={() => {
-          setTimeout(() => {
-            myRef.current.scrollIntoView({ behavior: 'smooth' });
-          }, 500);
-
-          setActiveStep(activeStep + 1);
-          calcData();
-        }}>
-        Жалғастыру
-      </button>
+      <Box sx={{ width: 'calc(100% - 375px)', position: 'fixed', padding: '0 28px 35px 28px', bottom: '0px', right: '0px', background: '#FBFBFB' }}>
+        <button style={{ border: 'none', color: '#fff', background: '#4282E1', borderRadius: '5px', height: '44px', width: '100%', fontSize: '16px', cursor: 'pointer' }} onClick={pageForm.handleSubmit(onSubmit)}>
+          Жалғастыру
+        </button>
+      </Box>
       {/* <Result {...calcData()} /> */}
       {activeStep == dataStep?.length &&
         result?.map((itemResult) => (
@@ -796,6 +855,7 @@ const CourseStart = () => {
             <Box sx={{ marginTop: '25px', height: '57px', background: 'rgba(66, 130, 225, 0.15)', borderRadius: '6px' }}> </Box>
           </Box>
         ))}
+      <Box ref={myRef}></Box>
     </Box>
   );
 };

@@ -9,24 +9,32 @@ const InputCustom = ({ isPassword, radioList, form, name, label, placeholder, is
   const [showPassword, setShowPassword] = useState(false);
   const error = form?.formState?.errors?.[name];
   return isRadio ? (
-    <div style={{ fontWeight: 400, fontSize: '16px', lineHeight: '22px', userSelect: 'none' }}>
-      <div style={{ marginBottom: '0px' }} className="input-lable input-label-required">
-        {label}
+    <>
+      <div style={{ fontWeight: 400, fontSize: '16px', lineHeight: '22px', userSelect: 'none' }}>
+        <div className="input-lable input-label-required" style={{ ...styleLabel }}>
+          {label}
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', color: 'rgba(0, 0, 0, 0.85)', alignItems: 'start' }}>
+          {radioList?.map((itemRadio, itemIndex) => (
+            <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', marginTop: itemIndex == 0 ? '0' : '5px' }}>
+              <input disabled={disabled} style={{ margin: '0 5px 0 0' }} {...form.register(name, disabled ? { required: false } : rules)} type="radio" value={itemRadio?.value} />
+              {itemRadio?.label}
+            </label>
+          ))}
+        </div>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {radioList?.map((itemRadio, itemIndex) => (
-          <label style={{ display: 'flex', alignItems: 'center', marginTop: '5px' }}>
-            <input disabled={disabled} style={{ margin: '0 5px 0 0' }} {...form.register(name)} type="radio" value={itemRadio?.value} />
-            {itemRadio?.label}
-          </label>
-        ))}
-      </div>
-    </div>
+      {errorText && <div style={{ marginTop: '5px', color: '#EB5757', fontSize: '14px' }}>{errorText}</div>}
+    </>
   ) : isNumber ? (
-    <label class={clsx('input-wrap', error && 'input-error')}>
-      <div className="input-lable input-label-required">{label}</div>
-      <Controller rules={rules} control={control} name={name} render={({ field: { onChange, name, value } }) => <NumericFormat {...(isPrice && { suffix: ' тг', thousandSeparator: ' ' })} name={name} className="input-custom" value={value} onChange={onChange} disabled={disabled} />} />
-    </label>
+    <>
+      <label class={clsx('input-wrap', error && 'input-error')}>
+        <div className="input-lable input-label-required" style={styleLabel}>
+          {label}
+        </div>
+        <Controller rules={rules} control={control} name={name} render={({ field: { onChange, name, value } }) => <NumericFormat {...(isPrice && { suffix: ' тг', thousandSeparator: ' ' })} name={name} className="input-custom" value={value} onChange={onChange} disabled={disabled} />} />
+      </label>
+      {errorText && <div style={{ marginTop: '5px', color: '#EB5757', fontSize: '14px' }}>{errorText}</div>}
+    </>
   ) : isSelect ? (
     <div>
       <div className="input-lable input-label-required" style={styleLabel}>
@@ -48,7 +56,8 @@ const InputCustom = ({ isPassword, radioList, form, name, label, placeholder, is
         name={name}
         rules={rules}
         control={control}
-      />
+      />{' '}
+      {errorText && <div style={{ marginTop: '5px', color: '#EB5757', fontSize: '14px' }}>{errorText}</div>}
     </div>
   ) : // <Controller control={control} defaultValue={options[0]} name={name} render={({ onChange, value, name, ref }) => <Select inputRef={ref} classNamePrefix="addl-class" options={options} value={options.find((c) => c.value === value)} onChange={(val) => onChange(val.value)} />} />
   // <label class={clsx('input-wrap', error && 'input-error')}>
@@ -62,7 +71,7 @@ const InputCustom = ({ isPassword, radioList, form, name, label, placeholder, is
       </div>
       <Controller
         rules={{
-          required: true,
+          required: { value: true, message: 'Заполните поле' },
           pattern: {
             value: /^(\+\ 7|7|8|\+7)[\s\-]?\(?[0-9][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/m,
             message: 'Неверный формат телефона',
@@ -72,18 +81,18 @@ const InputCustom = ({ isPassword, radioList, form, name, label, placeholder, is
         name={name}
         render={({ field: { onChange, name, value } }) => <PatternFormat style={{ ...styleInput }} format="+ 7 (###) ###-##-##" mask="_" name={name} className="input-custom" value={value} onChange={onChange} disabled={disabled} />}
       />
-      {errorText && <div style={{ marginTop: '10px', color: '#EB5757', fontSize: '20px' }}>{errorText}</div>}
+      {errorText && <div style={{ marginTop: '5px', color: '#EB5757', fontSize: '14px' }}>{errorText}</div>}
     </label>
   ) : isTextarea ? (
     <label class={clsx('input-wrap textarea-wrap', error && 'input-error')}>
       <div className="input-lable input-label-required" style={styleLabel}>
         {label}
       </div>
-      <textarea {...form.register(name, { required: true })} rows="6" className="input-custom" placeholder={placeholder} style={{ height: 'auto' }} />
+      <textarea {...form.register(name, { required: { value: true, message: 'Заполните поле' } })} rows="6" className="input-custom" placeholder={placeholder} style={{ height: 'auto' }} />
     </label>
   ) : isCheckbox ? (
     <label class={clsx('checkbox-custom', error && 'checkbox-error')}>
-      <input {...form.register(name, rules ? rules : { required: true })} type={'checkbox'} />
+      <input {...form.register(name, rules ? rules : { required: { value: true, message: 'Заполните поле' } })} type={'checkbox'} />
       <div></div>
       <span className="">{label}</span>
     </label>
@@ -96,17 +105,27 @@ const InputCustom = ({ isPassword, radioList, form, name, label, placeholder, is
         <input
           {...form.register(
             name,
-            rules
-              ? rules
-              : {
-                  required: true,
-                  ...(isEmail && {
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: 'invalid email address',
-                    },
-                  }),
+            {
+              required: { value: true, message: 'Заполните поле' },
+              ...(rules && rules),
+              ...(isEmail && {
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Неверный формат почты',
                 },
+              }),
+            },
+            // rules
+            //   ? rules
+            //   : {
+            //       required: { value: true, message: 'Заполните поле' },
+            //       ...(isEmail && {
+            //         pattern: {
+            //           value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+            //           message: 'invalid email address',
+            //         },
+            //       }),
+            //     },
           )}
           disabled={disabled}
           type={isPassword && !showPassword ? 'password' : 'text'}
@@ -141,7 +160,7 @@ const InputCustom = ({ isPassword, radioList, form, name, label, placeholder, is
           </>
         )}
       </div>
-      {errorText && <div style={{ marginTop: '10px', color: '#EB5757', fontSize: '20px' }}>{errorText}</div>}
+      {errorText && <div style={{ marginTop: '5px', color: '#EB5757', fontSize: '14px' }}>{errorText}</div>}
     </label>
   );
 };
