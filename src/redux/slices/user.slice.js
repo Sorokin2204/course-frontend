@@ -3,12 +3,16 @@ import { initStateCreateUser, reducerCreateUser } from '../actions/user/createUs
 import { initStateLoginUser, reducerLoginUser } from '../actions/user/loginUser';
 import { initStateAuthUser, reducerAuthUser } from '../actions/user/authUser';
 import { initStateUpdateUser, reducerUpdateUser } from '../actions/user/updateUser';
+import { initStateUpsertResult, reducerUpsertResult } from '../actions/user/upsertResult';
+import { initStateGetResult, reducerGetResult } from '../actions/user/getResult';
 
 export const initialState = {
   ...initStateCreateUser,
   ...initStateLoginUser,
   ...initStateAuthUser,
   ...initStateUpdateUser,
+  ...initStateUpsertResult,
+  ...initStateGetResult,
 };
 
 export const userSlice = createSlice({
@@ -33,6 +37,8 @@ export const userSlice = createSlice({
     ...reducerLoginUser,
     ...reducerAuthUser,
     ...reducerUpdateUser,
+    ...reducerUpsertResult,
+    ...reducerGetResult,
   },
 });
 export const { resetCreateUser, resetLoginUser, resetUpdateUser, resetAuthUser } = userSlice.actions;

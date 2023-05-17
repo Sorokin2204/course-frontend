@@ -43,6 +43,7 @@ const InputCustom = ({ isPassword, radioList, form, name, label, placeholder, is
       <Controller
         render={({ field }) => (
           <Select
+            isDisabled={disabled}
             options={options}
             classNamePrefix="custom-select"
             placeholder={' '}

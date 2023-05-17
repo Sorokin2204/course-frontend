@@ -4,6 +4,8 @@ import { Box, CircularProgress } from '@mui/material';
 import ButtonCustom from '../ButtonCustom/ButtonCustom';
 import Questions from '../Questions/Questions';
 import { useNavigate } from 'react-router';
+import { dataSteps } from '../CourseSteps/CourseSteps';
+import { useSelector } from 'react-redux';
 const CourseInfo = () => {
   const data = [
     {
@@ -24,6 +26,7 @@ const CourseInfo = () => {
     },
   ];
   const navigate = useNavigate();
+  const { activeChapter } = useSelector((state) => state.app);
   return (
     <Box
       sx={{
@@ -39,7 +42,7 @@ const CourseInfo = () => {
         </Box>
         <Box sx={{ position: 'relative', height: '48px', width: '48px' }}>
           <Box sx={{ width: '100%', height: '100%', position: 'absolute', borderRadius: '50%', border: '4px solid #F2F2F2' }}></Box>
-          <CircularProgress sx={{ color: '#4282E1' }} size={48} variant="determinate" value={0} />
+          <CircularProgress sx={{ color: '#4282E1' }} size={48} variant="determinate" value={parseInt((100 * (activeChapter + 1)) / dataSteps?.length)} />
           <Box
             sx={{
               color: '#fff',
@@ -57,7 +60,7 @@ const CourseInfo = () => {
               left: '50%',
               transform: 'translate(-50%,-50%)',
             }}>
-            0
+            {parseInt((100 * (activeChapter + 1)) / dataSteps?.length)}
           </Box>
         </Box>
       </Box>

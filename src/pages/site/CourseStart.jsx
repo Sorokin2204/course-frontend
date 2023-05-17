@@ -15,6 +15,8 @@ import { getNameBusiness } from '../../redux/actions/data/getNameBusiness';
 import { getTypeBusiness } from '../../redux/actions/data/getTypeBusiness';
 import { getTypeOfSale } from '../../redux/actions/data/getTypeOfSale';
 import { getWhereSale } from '../../redux/actions/data/getWhereSale';
+import { upsertResult } from '../../redux/actions/user/upsertResult';
+import { getResult } from '../../redux/actions/user/getResult';
 const duration = 300;
 
 const defaultStyle = {
@@ -247,7 +249,7 @@ const dataStepDefault = [
     value: <>Егер сіз білсеңіз, қажетті ақпаратты енгізіңіз.</>,
   },
   {
-    chapter: 'Үстеме(наценка)',
+    chapter: 'Тауардың қалдығы(остаток товара)',
     type: 'inputs',
     title: <>Тауардың қалдығы</>,
     fields: [
@@ -544,7 +546,6 @@ const dataStepDefault = [
     ],
   },
   {
-    chapter: 'Команда бонустары',
     type: 'inputs',
     title: <>Бонустар</>,
     fields: [
@@ -559,7 +560,6 @@ const dataStepDefault = [
         type: 'number',
       },
       {
-        chapter: 'Таза пайда',
         label: 'Бір жылдағы ең жақсы нәтижелер',
         name: 'countBestResultPeople',
         type: 'number',
@@ -594,6 +594,7 @@ const dataStepDefault = [
   },
 
   {
+    chapter: 'Команда бонустары',
     type: 'chat',
     name: 'Бахтияр',
     avatar: 'https://i.pravatar.cc/32',
@@ -633,6 +634,7 @@ const dataStepDefault = [
     value: <>Рахмет!</>,
   },
   {
+    chapter: 'Таза пайда',
     type: 'chat-self',
     avatar: 'https://i.pravatar.cc/32',
     value: <>Енді қорытындылайық</>,
@@ -731,6 +733,10 @@ const CourseStart = () => {
     getTypeOfSale: { data: getTypeOfSaleData },
     getWhereSale: { data: getWhereSaleData },
   } = useSelector((state) => state.app);
+  const {
+    authUser: { data: auth },
+    getResult: { data: getResultData, loading: getResultLoading },
+  } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const pageForm = useForm();
   console.log(pageForm.getValues());
@@ -766,6 +772,14 @@ const CourseStart = () => {
   const myRef = useRef(null);
   console.log(pageForm.formState.errors);
   const [activeStep, setActiveStep] = useState(2);
+  const activeStepRef = useRef();
+  const activeChapterRef = useRef();
+  useEffect(() => {
+    activeStepRef.current = activeStep;
+  }, [activeStep]);
+  useEffect(() => {
+    activeChapterRef.current = activeChapter;
+  }, [activeChapter]);
   const onSubmit = () => {
     setTimeout(() => {
       myRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -780,11 +794,39 @@ const CourseStart = () => {
     calcData();
   };
   useEffect(() => {
+    dispatch(getResult(auth?.id));
     dispatch(getNameBusiness());
     dispatch(getTypeBusiness());
     dispatch(getTypeOfSale());
     dispatch(getWhereSale());
+    window.addEventListener('unload', resetPage);
+
+    return () => {
+      window.removeEventListener('unload', resetPage);
+      resetPage();
+    };
   }, []);
+
+  const resetPage = () => {
+    dispatch(
+      upsertResult({
+        userId: auth?.id,
+        step: activeStepRef.current,
+        chapter: activeChapterRef.current,
+        dataCourse: pageForm.getValues(),
+      }),
+    );
+  };
+  useEffect(() => {
+    if (getResultData) {
+      pageForm.reset(JSON.parse(getResultData?.data));
+      dispatch(setActiveChapter(getResultData?.chapter));
+      setActiveStep(getResultData?.step);
+      setTimeout(() => {
+        myRef.current.scrollIntoView({ behavior: 'smooth' });
+      }, 500);
+    }
+  }, [getResultData]);
   useEffect(() => {
     if (getNameBusinessData && getTypeBusinessData && getTypeOfSaleData && getWhereSaleData) {
       let dataStepUpdate = dataStep;
@@ -801,62 +843,69 @@ const CourseStart = () => {
       console.log(dataStepUpdate);
     }
   }, [getNameBusinessData, getTypeBusinessData, getTypeOfSaleData, getWhereSaleData]);
-
+  console.log(activeStep);
   return (
-    <Box sx={{ paddingBottom: '44px', marginBottom: '40px' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <Box sx={{ fontWeight: '600', fontSize: '24px', marginRight: '25px' }}>Аудит бизнеса</Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', color: '#4282E1' }}>
-          <img src="/img/clock.svg" style={{ marginRight: '5px' }} />
-          150 мин.
-        </Box>
-      </Box>
-      <Box sx={{ marginTop: '24px', paddingBottom: '24px', borderBottom: '1px solid #E0E0E0', marginBottom: '24px' }}>
-        Сәлем Айбек! Мен-Бақтияр Өсербекұлы, 20–жылдық тәжірибесі бар бизнес-практик қарапайым тілмен айтқанда бизнестің механигімін және жүйелі басқарудан жетекшімін. Сізді біздің платформада қарсы алғаныма қуаныштымын!
-      </Box>
-      {dataStep?.map((item, itemIndex) => {
-        return (
-          <div
-            style={{
-              opacity: itemIndex < activeStep ? '1' : '0',
-              transition: 'all .4s',
-              transitionDelay: '.4s',
-              visibility: itemIndex < activeStep ? 'visible' : 'hidden',
-            }}>
-            <AnimateHeight duration={400} height={itemIndex < activeStep ? 'auto' : 0}>
-              <div> {getTypeComponents(item, pageForm, itemIndex < activeStep, activeStep, itemIndex)}</div>
-            </AnimateHeight>
-          </div>
-        );
-      })}
-      <Box sx={{ width: 'calc(100% - 375px)', position: 'fixed', padding: '0 28px 35px 28px', bottom: '0px', right: '0px', background: '#FBFBFB' }}>
-        <button style={{ border: 'none', color: '#fff', background: '#4282E1', borderRadius: '5px', height: '44px', width: '100%', fontSize: '16px', cursor: 'pointer' }} onClick={pageForm.handleSubmit(onSubmit)}>
-          Жалғастыру
-        </button>
-      </Box>
-      {/* <Result {...calcData()} /> */}
-      {activeStep == dataStep?.length &&
-        result?.map((itemResult) => (
-          <Box sx={{ marginTop: '40px', padding: '24px 24px 24px 50px', borderRadius: '12px', border: '1px solid rgba(66, 130, 225, 0.15)', position: 'relative' }}>
-            <Box>
-              <Box sx={{ fontWeight: '600', fontSize: '20px', marginBottom: '25px' }}> {itemResult?.title}</Box>
-              <Box sx={{ position: 'absolute', top: '15px', left: '22px', height: 'calc(100% - 30px)', width: '4px', borderRadius: '4px', background: '#4282E1' }}></Box>
+    <>
+      {!getResultLoading && (
+        <Box sx={{ paddingBottom: '44px', marginBottom: '40px' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ fontWeight: '600', fontSize: '24px', marginRight: '25px' }}>Аудит бизнеса</Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', color: '#4282E1' }}>
+              <img src="/img/clock.svg" style={{ marginRight: '5px' }} />
+              150 мин.
             </Box>
-            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: '25px' }}>
-              <label class={clsx('input-wrap')}>
-                <div className="input-lable input-label-required">{itemResult?.label}</div>
-                <input disabled={true} value={pageForm.getValues(itemResult?.name)} className="input-custom" />
-              </label>
-              <label class={clsx('input-wrap')}>
-                <div className="input-lable input-label-required">{itemResult?.labelTwo}</div>
-                <input disabled={true} value={itemResult?.recomend(pageForm)} className="input-custom" />
-              </label>
-            </Box>
-            <Box sx={{ marginTop: '25px', height: '57px', background: 'rgba(66, 130, 225, 0.15)', borderRadius: '6px' }}> </Box>
           </Box>
-        ))}
-      <Box ref={myRef}></Box>
-    </Box>
+          <Box sx={{ marginTop: '24px', paddingBottom: '24px', borderBottom: '1px solid #E0E0E0', marginBottom: '24px' }}>
+            Сәлем Айбек! Мен-Бақтияр Өсербекұлы, 20–жылдық тәжірибесі бар бизнес-практик қарапайым тілмен айтқанда бизнестің механигімін және жүйелі басқарудан жетекшімін. Сізді біздің платформада қарсы алғаныма қуаныштымын!
+          </Box>
+          {dataStep?.map((item, itemIndex) => {
+            return (
+              <div
+                style={{
+                  opacity: itemIndex < activeStep ? '1' : '0',
+                  transition: 'all .4s',
+                  transitionDelay: '.4s',
+                  visibility: itemIndex < activeStep ? 'visible' : 'hidden',
+                }}>
+                <AnimateHeight duration={400} height={itemIndex < activeStep ? 'auto' : 0}>
+                  <div> {getTypeComponents(item, pageForm, itemIndex < activeStep, activeStep, itemIndex)}</div>
+                </AnimateHeight>
+              </div>
+            );
+          })}
+          {dataStep?.length > activeStep && (
+            <Box sx={{ width: 'calc(100% - 375px)', position: 'fixed', padding: '0 28px 35px 28px', bottom: '0px', right: '0px', background: '#FBFBFB' }}>
+              <button style={{ border: 'none', color: '#fff', background: '#4282E1', borderRadius: '5px', height: '44px', width: '100%', fontSize: '16px', cursor: 'pointer' }} onClick={pageForm.handleSubmit(onSubmit)}>
+                Жалғастыру
+              </button>
+            </Box>
+          )}
+
+          {/* <Result {...calcData()} /> */}
+          {activeStep == dataStep?.length &&
+            result?.map((itemResult) => (
+              <Box sx={{ marginTop: '40px', padding: '24px 24px 24px 50px', borderRadius: '12px', border: '1px solid rgba(66, 130, 225, 0.15)', position: 'relative' }}>
+                <Box>
+                  <Box sx={{ fontWeight: '600', fontSize: '20px', marginBottom: '25px' }}> {itemResult?.title}</Box>
+                  <Box sx={{ position: 'absolute', top: '15px', left: '22px', height: 'calc(100% - 30px)', width: '4px', borderRadius: '4px', background: '#4282E1' }}></Box>
+                </Box>
+                <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: '25px' }}>
+                  <label class={clsx('input-wrap')}>
+                    <div className="input-lable input-label-required">{itemResult?.label}</div>
+                    <input disabled={true} value={pageForm.getValues(itemResult?.name)} className="input-custom" />
+                  </label>
+                  <label class={clsx('input-wrap')}>
+                    <div className="input-lable input-label-required">{itemResult?.labelTwo}</div>
+                    <input disabled={true} value={itemResult?.recomend(pageForm)} className="input-custom" />
+                  </label>
+                </Box>
+                <Box sx={{ marginTop: '25px', height: '57px', background: 'rgba(66, 130, 225, 0.15)', borderRadius: '6px' }}> </Box>
+              </Box>
+            ))}
+          <Box ref={myRef}></Box>
+        </Box>
+      )}
+    </>
   );
 };
 
