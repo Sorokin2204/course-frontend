@@ -178,22 +178,23 @@ const dataStepDefault = [
     type: 'chat',
     value: <>Егер сіз маржаның не екенін түсінбесеңіз немесе осы терминді егжей-тегжейлі зерттегіңіз келсе, осы тақырыптағы видеоны қараңыз.</>,
   },
-  {
-    type: 'video',
-  },
+  // {
+  //   type: 'video',
+  // },
+  // {
+  //
+  //   type: 'inputs',
+  //   title: <>Сіз өзіңіздің бағаңызды білесіз бе?</>,
+  //   fields: [
+  //     {
+  //       label: 'Үстеме',
+  //       name: 'margin',
+  //       type: 'number',
+  //     },
+  //   ],
+  // },
   {
     chapter: 'Үстеме(наценка)',
-    type: 'inputs',
-    title: <>Сіз өзіңіздің бағаңызды білесіз бе?</>,
-    fields: [
-      {
-        label: 'Үстеме',
-        name: 'margin',
-        type: 'number',
-      },
-    ],
-  },
-  {
     type: 'inputs',
     title: <>Введи процент наценки</>,
     fields: [
@@ -204,28 +205,28 @@ const dataStepDefault = [
       },
     ],
   },
-  {
-    status: (form) => {
-      const typeBusiness = parseInt(form.getValues('marginPercent'));
-      if (typeBusiness < 15) {
-        return 'bad';
-      } else {
-        return 'good';
-      }
-    },
-    type: 'chat',
-    valueStatus: (status) => {
-      if (status == 'good') {
-        return <>Жақсы!</>;
-      } else {
-        return (
-          <>
-            <b>Өте нашар.</b> <br /> <br /> Үстеме бағаны арттыру керек. Егер сізде көтерме сауда(оптом) болса, онда маржа 15%, ал бөлшек сауда(в розницу) болса, 30% және одан жоғары болуы керек.
-          </>
-        );
-      }
-    },
-  },
+  // {
+  //   status: (form) => {
+  //     const typeBusiness = parseInt(form.getValues('marginPercent'));
+  //     if (typeBusiness < 15) {
+  //       return 'bad';
+  //     } else {
+  //       return 'good';
+  //     }
+  //   },
+  //   type: 'chat',
+  //   valueStatus: (status) => {
+  //     if (status == 'good') {
+  //       return <>Жақсы!</>;
+  //     } else {
+  //       return (
+  //         <>
+  //           <b>Өте нашар.</b> <br /> <br /> Үстеме бағаны арттыру керек. Егер сізде көтерме сауда(оптом) болса, онда маржа 15%, ал бөлшек сауда(в розницу) болса, 30% және одан жоғары болуы керек.
+  //         </>
+  //       );
+  //     }
+  //   },
+  // },
   {
     type: 'chat-self',
     avatar: 'https://i.pravatar.cc/32',
@@ -260,27 +261,27 @@ const dataStepDefault = [
       },
     ],
   },
-  {
-    status: (form) => {
-      const restOfGoodsValue = parseInt(form.getValues('restOfGoods'));
-      const formula = parseFloat((parseInt(form.getValues('turnover')) - parseInt(form.getValues('margin'))) / 2).toFixed(2);
-      if (formula < restOfGoodsValue) {
-        return 'bad';
-      } else {
-        return 'good';
-      }
-    },
-    type: 'chat',
-    valueStatus: (status) => {
-      if (status == 'good') {
-        return <>Өте жақсы нәтиже!</>;
-      } else {
-        return (
-          <>Жағдайыңыз қиын екен. Себебі сіздің қоймаңыздағы тауардың саны  1 айда  сатылып жатқан тауардың санынан кемінде 2 есе төмен болуы керек ,яғни қазіргі жағдайда  сіз оборотыңызды кем дегенде 2-3  есе көтеруіңіз қажет.Бұл сұрақтың шешімін келесі инструментте нақты көрсететін боламыз.</>
-        );
-      }
-    },
-  },
+  // {
+  //   status: (form) => {
+  //     const restOfGoodsValue = parseInt(form.getValues('restOfGoods'));
+  //     const formula = parseFloat((parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('marginPercent'))) / 100) / 2).toFixed(2);
+  //     if (formula < restOfGoodsValue) {
+  //       return 'bad';
+  //     } else {
+  //       return 'good';
+  //     }
+  //   },
+  //   type: 'chat',
+  //   valueStatus: (status) => {
+  //     if (status == 'good') {
+  //       return <>Өте жақсы нәтиже!</>;
+  //     } else {
+  //       return (
+  //         <>Жағдайыңыз қиын екен. Себебі сіздің қоймаңыздағы тауардың саны  1 айда  сатылып жатқан тауардың санынан кемінде 2 есе төмен болуы керек ,яғни қазіргі жағдайда  сіз оборотыңызды кем дегенде 2-3  есе көтеруіңіз қажет.Бұл сұрақтың шешімін келесі инструментте нақты көрсететін боламыз.</>
+  //       );
+  //     }
+  //   },
+  // },
 
   {
     type: 'chat-self',
@@ -299,9 +300,9 @@ const dataStepDefault = [
     avatar: 'https://i.pravatar.cc/32',
     value: <>Егер осы тақырып бойынша сұрақтар туындаса, онда видеоны көріп шығыңыз.</>,
   },
-  {
-    type: 'video',
-  },
+  // {
+  //   type: 'video',
+  // },
   {
     type: 'chat',
     name: 'Бахтияр',
@@ -322,37 +323,37 @@ const dataStepDefault = [
     ],
   },
 
-  {
-    status: (form) => {
-      const dutyValue = form.getValues('duty');
-      const formula = (parseInt(form.getValues('restOfGoods')) * 0.4).toFixed(2);
-      if (dutyValue == 0) {
-        return 'good';
-      } else if (dutyValue > formula) {
-        return 'bad';
-      } else {
-        return 'normal';
-      }
-    },
-    type: 'chat',
-    valueStatus: (status) => {
-      if (status == 'good') {
-        return <>Тамаша!</>;
-      } else if (status == 'bad') {
-        return <>Бұл жаман(</>;
-      } else {
-        return <>Керемет жұмыс, жарайсың! Барлығы қалыпты.</>;
-      }
-    },
-  },
+  // {
+  //   status: (form) => {
+  //     const dutyValue = form.getValues('duty');
+  //     const formula = (parseInt(form.getValues('restOfGoods')) * 0.4).toFixed(2);
+  //     if (dutyValue == 0) {
+  //       return 'good';
+  //     } else if (dutyValue > formula) {
+  //       return 'bad';
+  //     } else {
+  //       return 'normal';
+  //     }
+  //   },
+  //   type: 'chat',
+  //   valueStatus: (status) => {
+  //     if (status == 'good') {
+  //       return <>Тамаша!</>;
+  //     } else if (status == 'bad') {
+  //       return <>Бұл жаман(</>;
+  //     } else {
+  //       return <>Керемет жұмыс, жарайсың! Барлығы қалыпты.</>;
+  //     }
+  //   },
+  // },
 
   {
     type: 'chat',
     value: <>Келесі сұрақ. Сіз айына рекламаға қанша ақша жұмсайсыз?  Осы тақырыптағы видеоны көрейік</>,
   },
-  {
-    type: 'video',
-  },
+  // {
+  //   type: 'video',
+  // },
   {
     type: 'chat-self',
     avatar: 'https://i.pravatar.cc/32',
@@ -405,9 +406,9 @@ const dataStepDefault = [
     type: 'chat',
     value: <>Видеоны тағы бір рет көрейік! Қайталау-ілімнің анасы! Енді сіз қателеспейсіз!</>,
   },
-  {
-    type: 'video',
-  },
+  // {
+  //   type: 'video',
+  // },
   {
     type: 'chat-self',
     avatar: 'https://i.pravatar.cc/32',
@@ -508,9 +509,6 @@ const dataStepDefault = [
   },
 
   {
-    type: 'chapter-end',
-  },
-  {
     type: 'chat',
     name: 'Бахтияр',
     avatar: 'https://i.pravatar.cc/32',
@@ -608,9 +606,9 @@ const dataStepDefault = [
       </>
     ),
   },
-  {
-    type: 'video',
-  },
+  // {
+  //   type: 'video',
+  // },
   {
     type: 'chat-self',
     avatar: 'https://i.pravatar.cc/32',
@@ -639,6 +637,9 @@ const dataStepDefault = [
     avatar: 'https://i.pravatar.cc/32',
     value: <>Енді қорытындылайық</>,
   },
+  {
+    type: 'chapter-end',
+  },
 ];
 
 const result = [
@@ -648,7 +649,7 @@ const result = [
     labelTwo: 'Сізге ұсынылған айналым',
     name: 'turnover',
     recomend: (form) => {
-      return form.getValues('countPeople') * 10000000;
+      return form.getValues('countPeople') * 5000000;
     },
   },
   {
@@ -657,7 +658,7 @@ const result = [
     labelTwo: 'Сізге ұсынылған үстеме',
     name: 'marginPercent',
     recomend: (form) => {
-      return 30;
+      return parseInt(form.getValues('choiceBusiness')?.margin);
     },
   },
   {
@@ -666,7 +667,7 @@ const result = [
     labelTwo: 'Ұсынылған тауар қалдығы',
     name: 'restOfGoods',
     recomend: (form) => {
-      return parseInt((parseInt(form.getValues('turnover')) - parseInt(form.getValues('margin'))) / 2);
+      return parseFloat((parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('marginPercent'))) / 100) / 2).toFixed(2);
     },
   },
   {
@@ -675,7 +676,7 @@ const result = [
     labelTwo: 'Ұсынылған қарыз',
     name: 'duty',
     recomend: (form) => {
-      return 0;
+      return (parseInt(form.getValues('restOfGoods')) * 0.4).toFixed(2);
     },
   },
   {
@@ -697,21 +698,60 @@ const result = [
     },
   },
   {
+    title: 'Расход',
+    label: 'Ваш расход',
+    labelTwo: 'Рекомендованный расход',
+    name: 'flow',
+    recomend: (form) => {
+      return (parseInt(form.getValues('dirty')) * 0.15).toFixed(2);
+    },
+  },
+  {
     title: 'Сіздің командаңыздың жалақысы',
     label: 'Сіздің команданың жалақысы',
     labelTwo: 'Команданың ұсынылған жалақысы',
     name: 'wage',
     recomend: (form) => {
-      return parseInt(form.getValues('wage')) * parseInt(form.getValues('countPeople'));
+      return (parseInt(form.getValues('cash')) * 0.3).toFixed(2);
+    },
+  },
+  {
+    title: 'Количество сотрудников',
+    label: 'Текущие количество сотрудников',
+    labelTwo: 'Рекомендованное количество сотрудников',
+    name: 'countPeople',
+    recomend: (form) => {
+      return (parseInt(form.getValues('turnover')) / 5000000).toFixed(2) - (parseInt(form.getValues('dirty')) * 0.015).toFixed(2);
+    },
+  },
+  {
+    title: 'Кэш компании',
+    label: 'Ваш кэш компании',
+    labelTwo: 'Рекомендованное количество сотрудников',
+    name: 'cash',
+    recomend: (form) => {
+      return (parseInt(form.getValues('turnover')) * 0.025).toFixed(2);
     },
   },
   {
     title: 'Команда бонустары',
     label: 'Сіздің командалық бонустарыңыз',
     labelTwo: 'Команданың ұсынылған бонустары',
+    labelThird: 'Бонусы за месяц',
+    labelFour: 'Бонасы за обучение за квартал ',
+    labelFive: 'Бонус за год',
     name: 'cashCommand',
     recomend: (form) => {
-      return 0;
+      return (parseInt(form.getValues('cash')) * 0.15).toFixed(2);
+    },
+    recomendSecond: (form) => {
+      return (parseInt(form.getValues('cash')) * 0.5).toFixed(2);
+    },
+    recomendThird: (form) => {
+      return (parseInt(form.getValues('cash')) * 0.5 * 3).toFixed(2);
+    },
+    recomendFour: (form) => {
+      return (parseInt(form.getValues('cash')) * 0.05 * 12).toFixed(2);
     },
   },
   {
@@ -720,7 +760,25 @@ const result = [
     labelTwo: 'Болу керек таза пайда',
     name: 'netProfit',
     recomend: (form) => {
-      return 0;
+      return (parseInt(form.getValues('cash')) * 0.7).toFixed(2);
+    },
+  },
+  {
+    title: 'Реинвест',
+    label: 'Ваш Реинвест',
+    labelTwo: 'Рекомендованный реинвест',
+    name: 'reinvest',
+    recomend: (form) => {
+      return (parseInt(form.getValues('cash')) * 0.7 * 0.7).toFixed(2);
+    },
+  },
+  {
+    title: 'Кэшаут',
+    label: 'Ваш кэшаут',
+    labelTwo: 'Рекомендованный кэшаут',
+    name: 'cashOut',
+    recomend: (form) => {
+      return (parseInt(form.getValues('cash')) * 0.7 * 0.3).toFixed(2);
     },
   },
 ];
@@ -832,7 +890,7 @@ const CourseStart = () => {
       let dataStepUpdate = dataStep;
       dataStepUpdate[4].fields[7].options = getTypeBusinessData?.map((itemTypeBusiness) => ({
         label: itemTypeBusiness?.name,
-        options: getNameBusinessData?.filter((itemNameBusiness) => itemNameBusiness?.typeBusinessId == itemTypeBusiness?.id)?.map((itemNameBusiness) => ({ value: itemNameBusiness?.id, label: itemNameBusiness?.name })),
+        options: getNameBusinessData?.filter((itemNameBusiness) => itemNameBusiness?.typeBusinessId == itemTypeBusiness?.id)?.map((itemNameBusiness) => ({ margin: itemTypeBusiness?.margin, value: itemNameBusiness?.id, label: itemNameBusiness?.name })),
       }));
       dataStepUpdate[4].fields[8].options = getTypeOfSaleData?.map((itemTypeOfSale) => ({ value: itemTypeOfSale?.id, label: itemTypeOfSale?.name }));
       dataStepUpdate[4].fields[9].options = [
@@ -892,12 +950,31 @@ const CourseStart = () => {
                 <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: '25px' }}>
                   <label class={clsx('input-wrap')}>
                     <div className="input-lable input-label-required">{itemResult?.label}</div>
-                    <input disabled={true} value={pageForm.getValues(itemResult?.name)} className="input-custom" />
+                    <input disabled={true} value={itemResult?.name == 'cashCommand' ? 0 : pageForm.getValues(itemResult?.name)} className="input-custom" />
                   </label>
-                  <label class={clsx('input-wrap')}>
-                    <div className="input-lable input-label-required">{itemResult?.labelTwo}</div>
-                    <input disabled={true} value={itemResult?.recomend(pageForm)} className="input-custom" />
-                  </label>
+                  <Box>
+                    <label class={clsx('input-wrap')}>
+                      <div className="input-lable input-label-required">{itemResult?.labelTwo}</div>
+                      <input disabled={true} value={itemResult?.recomend(pageForm)} className="input-custom" />
+                    </label>
+                    {itemResult?.name == 'cashCommand' && (
+                      <>
+                        {' '}
+                        <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                          <div className="input-lable input-label-required">{itemResult?.labelThird}</div>
+                          <input disabled={true} value={itemResult?.recomendSecond(pageForm)} className="input-custom" />
+                        </label>
+                        <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                          <div className="input-lable input-label-required">{itemResult?.labelFour}</div>
+                          <input disabled={true} value={itemResult?.recomendThird(pageForm)} className="input-custom" />
+                        </label>{' '}
+                        <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                          <div className="input-lable input-label-required">{itemResult?.labelFive}</div>
+                          <input disabled={true} value={itemResult?.recomendFour(pageForm)} className="input-custom" />
+                        </label>
+                      </>
+                    )}
+                  </Box>
                 </Box>
                 <Box sx={{ marginTop: '25px', height: '57px', background: 'rgba(66, 130, 225, 0.15)', borderRadius: '6px' }}> </Box>
               </Box>
