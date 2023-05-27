@@ -1039,7 +1039,7 @@ const CourseStart = () => {
                   <Box sx={{ marginTop: '25px', height: '57px', background: 'rgba(66, 130, 225, 0.15)', borderRadius: '6px' }}> </Box>
                 </Box>
               ))}
-              <Box sx={{ fontSize: '24px', marginTop: '30px', fontWeight: '600', textAlign: 'center' }}>Масштобирование</Box>
+              {/* <Box sx={{ fontSize: '24px', marginTop: '30px', fontWeight: '600', textAlign: 'center' }}>Масштобирование</Box>
               {result?.map((itemResult) => (
                 <Box sx={{ marginTop: '40px', padding: '24px 24px 24px 50px', borderRadius: '12px', border: '1px solid rgba(66, 130, 225, 0.15)', position: 'relative' }}>
                   <Box>
@@ -1077,7 +1077,7 @@ const CourseStart = () => {
                   </Box>
                   <Box sx={{ marginTop: '25px', height: '57px', background: 'rgba(66, 130, 225, 0.15)', borderRadius: '6px' }}> </Box>
                 </Box>
-              ))}
+              ))} */}
             </>
           )}
           <Box ref={myRef}></Box>
