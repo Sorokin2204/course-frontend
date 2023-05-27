@@ -31,7 +31,7 @@ const InputCustom = ({ isPassword, radioList, form, name, label, placeholder, is
         <div className="input-lable input-label-required" style={styleLabel}>
           {label}
         </div>
-        <Controller rules={rules} control={control} name={name} render={({ field: { onChange, name, value } }) => <NumericFormat {...(isPrice && { suffix: ' тг', thousandSeparator: ' ' })} name={name} className="input-custom" value={value} onChange={onChange} disabled={disabled} />} />
+        <Controller rules={rules} control={control} name={name} render={({ field: { onChange, name, value } }) => <NumericFormat {...(isPrice && { suffix: ' тг', thousandSeparator: ',' })} name={name} className="input-custom" value={value} onChange={onChange} disabled={disabled} />} />
       </label>
       {errorText && <div style={{ marginTop: '5px', color: '#EB5757', fontSize: '14px' }}>{errorText}</div>}
     </>

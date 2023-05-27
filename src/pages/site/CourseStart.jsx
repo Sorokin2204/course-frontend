@@ -17,6 +17,7 @@ import { getTypeOfSale } from '../../redux/actions/data/getTypeOfSale';
 import { getWhereSale } from '../../redux/actions/data/getWhereSale';
 import { upsertResult } from '../../redux/actions/user/upsertResult';
 import { getResult } from '../../redux/actions/user/getResult';
+import { NumericFormat } from 'react-number-format';
 const duration = 300;
 
 const defaultStyle = {
@@ -380,9 +381,11 @@ const dataStepDefault = [
       const marginPercentValue = parseInt(form.getValues('marginPercent'));
 
       const formula = (marketingValue / turnoverValue).toFixed(2) * 100;
+      const sumProductValue = turnoverValue - (turnoverValue * marginPercentValue) / 100;
       const dirtyValue = turnoverValue - (turnoverValue * (100 - marginPercentValue)) / 100 - marketingValue;
       form.setValue('marketingPercent', formula);
       form.setValue('dirty', dirtyValue);
+      form.setValue('sumProduct', sumProductValue);
       if ((formula > 2 && formula < 3) || formula == 2 || formula == 3) {
         return 'normal';
       } else if (formula > 3) {
@@ -466,11 +469,13 @@ const dataStepDefault = [
       const varFlowValue = parseInt(form.getValues('varFlow'));
       const otherFlowValue = parseInt(form.getValues('otherFlow'));
       const flowValue = constFlowValue + varFlowValue + otherFlowValue;
-      const cashValue = dirtyValue - flowValue;
+      const cashValue = parseInt(dirtyValue - flowValue);
       const cashCommand = parseInt(cashValue * 0.3);
+      const cashOwner = parseInt(cashValue - cashCommand);
       form.setValue('flow', flowValue);
       form.setValue('cash', cashValue);
       form.setValue('cashCommand', cashCommand);
+      form.setValue('cashOwner', cashOwner);
       const dirtyBetween1 = parseInt(dirtyValue * 0.1);
       const dirtyBetween2 = parseInt(dirtyValue * 0.2);
 
@@ -648,8 +653,10 @@ const result = [
     label: 'Сіздің айдағы айналымыңыз',
     labelTwo: 'Сізге ұсынылған айналым',
     name: 'turnover',
+    isPrice: true,
     recomend: (form) => {
-      return form.getValues('countPeople') * 5000000;
+      // return form.getValues('countPeople') * 5000000;
+      return form.getValues('turnover');
     },
   },
   {
@@ -662,12 +669,22 @@ const result = [
     },
   },
   {
+    title: 'Сумма товара',
+    label: 'Сіздің үстеме бағаңыз',
+    labelTwo: 'Сізге ұсынылған үстеме',
+    name: 'sumProduct',
+    isPrice: true,
+    recomend: (form) => {
+      return parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100;
+    },
+  },
+  {
     title: 'Тауардың қалдығы(остаток товара)',
     label: 'Сіздің тауар қалдығыңыз',
     labelTwo: 'Ұсынылған тауар қалдығы',
     name: 'restOfGoods',
     recomend: (form) => {
-      return parseFloat((parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('marginPercent'))) / 100) / 2).toFixed(2);
+      return parseFloat(parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100 / 2).toFixed(2);
     },
   },
   {
@@ -675,12 +692,13 @@ const result = [
     label: 'Сіздің қарызыңыз',
     labelTwo: 'Ұсынылған қарыз',
     name: 'duty',
+    isPrice: true,
     recomend: (form) => {
-      return (parseInt(form.getValues('restOfGoods')) * 0.4).toFixed(2);
+      return (parseFloat(parseInt(form.getValues('sumProduct')) / 2).toFixed(2) * 0.4).toFixed(2);
     },
   },
   {
-    title: 'Маркетинг',
+    title: 'Маркетинг в проценте',
     label: 'Сіздің маркетингтік шығындарыңыз',
     labelTwo: 'Ұсынылған маркетингтік шығындар',
     name: 'marketingPercent',
@@ -689,12 +707,23 @@ const result = [
     },
   },
   {
-    title: 'Грязная прибыль/маржа',
-    label: 'Грязная прибыль/маржа',
+    title: 'Маркетинг в тенге',
+    label: 'Сіздің маркетингтік шығындарыңыз',
+    labelTwo: 'Ұсынылған маркетингтік шығындар',
+    name: 'marketingPercent',
+    isPrice: true,
+    recomend: (form) => {
+      return parseFloat(parseInt(form.getValues('turnover')) * (30 / 100)).toFixed(2);
+    },
+  },
+  {
+    title: 'Грязная прибыль',
+    label: 'Грязная прибыль',
     labelTwo: 'Ұсынылған маркетингтік шығындар',
     name: 'dirty',
+    isPrice: true,
     recomend: (form) => {
-      return (parseInt(form.getValues('turnover')) * 0.025).toFixed(2);
+      return (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100) - parseFloat(parseInt(form.getValues('turnover')) * (30 / 100)).toFixed(2)).toFixed(2);
     },
   },
   {
@@ -702,35 +731,59 @@ const result = [
     label: 'Ваш расход',
     labelTwo: 'Рекомендованный расход',
     name: 'flow',
+    isPrice: true,
     recomend: (form) => {
-      return (parseInt(form.getValues('dirty')) * 0.15).toFixed(2);
-    },
-  },
-  {
-    title: 'Сіздің командаңыздың жалақысы',
-    label: 'Сіздің команданың жалақысы',
-    labelTwo: 'Команданың ұсынылған жалақысы',
-    name: 'wage',
-    recomend: (form) => {
-      return (parseInt(form.getValues('cash')) * 0.3).toFixed(2);
-    },
-  },
-  {
-    title: 'Количество сотрудников',
-    label: 'Текущие количество сотрудников',
-    labelTwo: 'Рекомендованное количество сотрудников',
-    name: 'countPeople',
-    recomend: (form) => {
-      return (parseInt(form.getValues('turnover')) / 5000000).toFixed(2) - (parseInt(form.getValues('dirty')) * 0.015).toFixed(2);
+      return ((parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100) - parseFloat(parseInt(form.getValues('turnover')) * (30 / 100)).toFixed(2)).toFixed(2) * 0.15).toFixed(2);
     },
   },
   {
     title: 'Кэш компании',
-    label: 'Ваш кэш компании',
-    labelTwo: 'Рекомендованное количество сотрудников',
+    label: 'Сіздің команданың жалақысы',
+    labelTwo: 'Команданың ұсынылған жалақысы',
     name: 'cash',
+    isPrice: true,
     recomend: (form) => {
-      return (parseInt(form.getValues('turnover')) * 0.025).toFixed(2);
+      return (
+        (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100) - parseFloat(parseInt(form.getValues('turnover')) * (30 / 100)).toFixed(2)).toFixed(2) -
+        (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100) - parseFloat(parseInt(form.getValues('turnover')) * (30 / 100)).toFixed(2)).toFixed(2) * 0.15
+      ).toFixed(2);
+    },
+  },
+
+  {
+    title: 'Команданын саны',
+    label: 'Сіздің команданың жалақысы',
+    labelTwo: 'Команданың ұсынылған жалақысы',
+    name: 'countPeople',
+    recomend: (form) => {
+      return (parseInt(form.getValues('turnover')) / 5000000).toFixed(2);
+    },
+  },
+  {
+    title: 'Фонд оплата труда',
+    label: 'Сіздің командалық бонустарыңыз',
+    labelTwo: 'Команданың ұсынылған бонустары',
+    name: 'wage',
+    recomend: (form) => {
+      return (
+        ((parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100) - parseFloat(parseInt(form.getValues('turnover')) * (30 / 100)).toFixed(2)).toFixed(2) -
+          ((parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100) - parseFloat(parseInt(form.getValues('turnover')) * (30 / 100)).toFixed(2)).toFixed(2) * 0.15).toFixed(2)) *
+        0.15
+      ).toFixed(2);
+    },
+  },
+  {
+    title: 'Кэш владелца',
+    label: 'Сіздің командалық бонустарыңыз',
+    labelTwo: 'Команданың ұсынылған бонустары',
+    name: 'cashOwner',
+    isPrice: true,
+    recomend: (form) => {
+      return (
+        ((parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100) - parseFloat(parseInt(form.getValues('turnover')) * (30 / 100)).toFixed(2)).toFixed(2) -
+          ((parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100) - parseFloat(parseInt(form.getValues('turnover')) * (30 / 100)).toFixed(2)).toFixed(2) * 0.15).toFixed(2)) *
+        0.15
+      ).toFixed(2);
     },
   },
   {
@@ -741,6 +794,7 @@ const result = [
     labelFour: 'Бонасы за обучение за квартал ',
     labelFive: 'Бонус за год',
     name: 'cashCommand',
+    isPrice: true,
     recomend: (form) => {
       return (parseInt(form.getValues('cash')) * 0.15).toFixed(2);
     },
@@ -759,6 +813,7 @@ const result = [
     label: 'Сіздің таза пайдаңыз',
     labelTwo: 'Болу керек таза пайда',
     name: 'netProfit',
+    isPrice: true,
     recomend: (form) => {
       return (parseInt(form.getValues('cash')) * 0.7).toFixed(2);
     },
@@ -768,6 +823,7 @@ const result = [
     label: 'Ваш Реинвест',
     labelTwo: 'Рекомендованный реинвест',
     name: 'reinvest',
+    isPrice: true,
     recomend: (form) => {
       return (parseInt(form.getValues('cash')) * 0.7 * 0.7).toFixed(2);
     },
@@ -777,6 +833,7 @@ const result = [
     label: 'Ваш кэшаут',
     labelTwo: 'Рекомендованный кэшаут',
     name: 'cashOut',
+    isPrice: true,
     recomend: (form) => {
       return (parseInt(form.getValues('cash')) * 0.7 * 0.3).toFixed(2);
     },
@@ -940,45 +997,89 @@ const CourseStart = () => {
           )}
 
           {/* <Result {...calcData()} /> */}
-          {activeStep == dataStep?.length &&
-            result?.map((itemResult) => (
-              <Box sx={{ marginTop: '40px', padding: '24px 24px 24px 50px', borderRadius: '12px', border: '1px solid rgba(66, 130, 225, 0.15)', position: 'relative' }}>
-                <Box>
-                  <Box sx={{ fontWeight: '600', fontSize: '20px', marginBottom: '25px' }}> {itemResult?.title}</Box>
-                  <Box sx={{ position: 'absolute', top: '15px', left: '22px', height: 'calc(100% - 30px)', width: '4px', borderRadius: '4px', background: '#4282E1' }}></Box>
-                </Box>
-                <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: '25px' }}>
-                  <label class={clsx('input-wrap')}>
-                    <div className="input-lable input-label-required">{itemResult?.label}</div>
-                    <input disabled={true} value={itemResult?.name == 'cashCommand' ? 0 : pageForm.getValues(itemResult?.name)} className="input-custom" />
-                  </label>
+          {activeStep == dataStep?.length && (
+            <>
+              <Box sx={{ fontSize: '24px', marginTop: '30px', fontWeight: '600', textAlign: 'center' }}>Оптимизация</Box>
+              {result?.map((itemResult) => (
+                <Box sx={{ marginTop: '40px', padding: '24px 24px 24px 50px', borderRadius: '12px', border: '1px solid rgba(66, 130, 225, 0.15)', position: 'relative' }}>
                   <Box>
-                    <label class={clsx('input-wrap')}>
-                      <div className="input-lable input-label-required">{itemResult?.labelTwo}</div>
-                      <input disabled={true} value={itemResult?.recomend(pageForm)} className="input-custom" />
-                    </label>
-                    {itemResult?.name == 'cashCommand' && (
-                      <>
-                        {' '}
-                        <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
-                          <div className="input-lable input-label-required">{itemResult?.labelThird}</div>
-                          <input disabled={true} value={itemResult?.recomendSecond(pageForm)} className="input-custom" />
-                        </label>
-                        <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
-                          <div className="input-lable input-label-required">{itemResult?.labelFour}</div>
-                          <input disabled={true} value={itemResult?.recomendThird(pageForm)} className="input-custom" />
-                        </label>{' '}
-                        <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
-                          <div className="input-lable input-label-required">{itemResult?.labelFive}</div>
-                          <input disabled={true} value={itemResult?.recomendFour(pageForm)} className="input-custom" />
-                        </label>
-                      </>
-                    )}
+                    <Box sx={{ fontWeight: '600', fontSize: '20px', marginBottom: '25px' }}> {itemResult?.title}</Box>
+                    <Box sx={{ position: 'absolute', top: '15px', left: '22px', height: 'calc(100% - 30px)', width: '4px', borderRadius: '4px', background: '#4282E1' }}></Box>
                   </Box>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: '25px' }}>
+                    <label class={clsx('input-wrap')}>
+                      <div className="input-lable input-label-required">{itemResult?.label}</div>
+                      <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.name == 'cashCommand' ? 0 : pageForm.getValues(itemResult?.name)} />
+                    </label>
+                    <Box>
+                      <label class={clsx('input-wrap')}>
+                        <div className="input-lable input-label-required">{itemResult?.labelTwo}</div>
+
+                        <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomend(pageForm)} />
+                      </label>
+                      {itemResult?.name == 'cashCommand' && (
+                        <>
+                          {' '}
+                          <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                            <div className="input-lable input-label-required">{itemResult?.labelThird}</div>
+                            <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomendSecond(pageForm)} />
+                          </label>
+                          <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                            <div className="input-lable input-label-required">{itemResult?.labelFour}</div>
+                            <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomendThird(pageForm)} />
+                          </label>{' '}
+                          <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                            <div className="input-lable input-label-required">{itemResult?.labelFive}</div>
+                            <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomendFour(pageForm)} />
+                          </label>
+                        </>
+                      )}
+                    </Box>
+                  </Box>
+                  <Box sx={{ marginTop: '25px', height: '57px', background: 'rgba(66, 130, 225, 0.15)', borderRadius: '6px' }}> </Box>
                 </Box>
-                <Box sx={{ marginTop: '25px', height: '57px', background: 'rgba(66, 130, 225, 0.15)', borderRadius: '6px' }}> </Box>
-              </Box>
-            ))}
+              ))}
+              <Box sx={{ fontSize: '24px', marginTop: '30px', fontWeight: '600', textAlign: 'center' }}>Масштобирование</Box>
+              {result?.map((itemResult) => (
+                <Box sx={{ marginTop: '40px', padding: '24px 24px 24px 50px', borderRadius: '12px', border: '1px solid rgba(66, 130, 225, 0.15)', position: 'relative' }}>
+                  <Box>
+                    <Box sx={{ fontWeight: '600', fontSize: '20px', marginBottom: '25px' }}> {itemResult?.title}</Box>
+                    <Box sx={{ position: 'absolute', top: '15px', left: '22px', height: 'calc(100% - 30px)', width: '4px', borderRadius: '4px', background: '#4282E1' }}></Box>
+                  </Box>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: '25px' }}>
+                    <label class={clsx('input-wrap')}>
+                      <div className="input-lable input-label-required">{itemResult?.label}</div>
+                      <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.name == 'cashCommand' ? 0 : pageForm.getValues(itemResult?.name)} />
+                    </label>
+                    <Box>
+                      <label class={clsx('input-wrap')}>
+                        <div className="input-lable input-label-required">{itemResult?.labelTwo}</div>
+                        <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomend(pageForm)} />
+                      </label>
+                      {itemResult?.name == 'cashCommand' && (
+                        <>
+                          {' '}
+                          <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                            <div className="input-lable input-label-required">{itemResult?.labelThird}</div>
+                            <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomendSecond(pageForm)} />
+                          </label>
+                          <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                            <div className="input-lable input-label-required">{itemResult?.labelFour}</div>
+                            <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomendThird(pageForm)} />
+                          </label>{' '}
+                          <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                            <div className="input-lable input-label-required">{itemResult?.labelFive}</div>
+                            <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomendFour(pageForm)} />
+                          </label>
+                        </>
+                      )}
+                    </Box>
+                  </Box>
+                  <Box sx={{ marginTop: '25px', height: '57px', background: 'rgba(66, 130, 225, 0.15)', borderRadius: '6px' }}> </Box>
+                </Box>
+              ))}
+            </>
+          )}
           <Box ref={myRef}></Box>
         </Box>
       )}
