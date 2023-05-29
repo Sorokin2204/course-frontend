@@ -385,7 +385,7 @@ const dataStepDefault = [
       const dirtyValue = turnoverValue - (turnoverValue * (100 - marginPercentValue)) / 100 - marketingValue;
       form.setValue('marketingPercent', formula);
       form.setValue('dirty', dirtyValue);
-      form.setValue('sumProduct', sumProductValue);
+      form.setValue('sumProduct', parseFloat(sumProductValue));
       if ((formula > 2 && formula < 3) || formula == 2 || formula == 3) {
         return 'normal';
       } else if (formula > 3) {
@@ -647,198 +647,287 @@ const dataStepDefault = [
   },
 ];
 
-const result = [
-  {
-    title: 'Айналым(оборот)',
-    label: 'Сіздің айдағы айналымыңыз',
-    labelTwo: 'Сізге ұсынылған айналым',
-    name: 'turnover',
-    isPrice: true,
-    recomend: (form) => {
-      // return form.getValues('countPeople') * 5000000;
-      return form.getValues('turnover');
-    },
-  },
-  {
-    title: 'Үстеме(наценка)',
-    label: 'Сіздің үстеме бағаңыз',
-    labelTwo: 'Сізге ұсынылған үстеме',
-    name: 'marginPercent',
-    recomend: (form) => {
-      return parseInt(form.getValues('choiceBusiness')?.margin);
-    },
-  },
-  {
-    title: 'Сумма товара',
-    label: 'Сіздің үстеме бағаңыз',
-    labelTwo: 'Сізге ұсынылған үстеме',
-    name: 'sumProduct',
-    isPrice: true,
-    recomend: (form) => {
-      return parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100;
-    },
-  },
-  {
-    title: 'Тауардың қалдығы(остаток товара)',
-    label: 'Сіздің тауар қалдығыңыз',
-    labelTwo: 'Ұсынылған тауар қалдығы',
-    name: 'restOfGoods',
-    recomend: (form) => {
-      return parseFloat(parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100 / 2).toFixed(2);
-    },
-  },
-  {
-    title: 'Оптовиктердің/поставщиктердің алдындағы қарыз(долг перед постащиками)',
-    label: 'Сіздің қарызыңыз',
-    labelTwo: 'Ұсынылған қарыз',
-    name: 'duty',
-    isPrice: true,
-    recomend: (form) => {
-      return (parseFloat(parseInt(form.getValues('sumProduct')) / 2).toFixed(2) * 0.4).toFixed(2);
-    },
-  },
-  {
-    title: 'Маркетинг в проценте',
-    label: 'Сіздің маркетингтік шығындарыңыз',
-    labelTwo: 'Ұсынылған маркетингтік шығындар',
-    name: 'marketingPercent',
-    recomend: (form) => {
-      return 2.5;
-    },
-  },
-  {
-    title: 'Маркетинг в тенге',
-    label: 'Сіздің маркетингтік шығындарыңыз',
-    labelTwo: 'Ұсынылған маркетингтік шығындар',
-    name: 'marketingPercent',
-    isPrice: true,
-    recomend: (form) => {
-      return parseFloat(parseInt(form.getValues('turnover')) * (30 / 100)).toFixed(2);
-    },
-  },
-  {
-    title: 'Грязная прибыль',
-    label: 'Грязная прибыль',
-    labelTwo: 'Ұсынылған маркетингтік шығындар',
-    name: 'dirty',
-    isPrice: true,
-    recomend: (form) => {
-      return (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100) - parseFloat(parseInt(form.getValues('turnover')) * (30 / 100)).toFixed(2)).toFixed(2);
-    },
-  },
-  {
-    title: 'Расход',
-    label: 'Ваш расход',
-    labelTwo: 'Рекомендованный расход',
-    name: 'flow',
-    isPrice: true,
-    recomend: (form) => {
-      return ((parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100) - parseFloat(parseInt(form.getValues('turnover')) * (30 / 100)).toFixed(2)).toFixed(2) * 0.15).toFixed(2);
-    },
-  },
-  {
-    title: 'Кэш компании',
-    label: 'Сіздің команданың жалақысы',
-    labelTwo: 'Команданың ұсынылған жалақысы',
-    name: 'cash',
-    isPrice: true,
-    recomend: (form) => {
-      return (
-        (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100) - parseFloat(parseInt(form.getValues('turnover')) * (30 / 100)).toFixed(2)).toFixed(2) -
-        (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100) - parseFloat(parseInt(form.getValues('turnover')) * (30 / 100)).toFixed(2)).toFixed(2) * 0.15
-      ).toFixed(2);
-    },
-  },
+const getCheckupData = (form, isSecond = false) => {
+  const turnoverValueSource = parseInt(form.getValues('turnover'));
+  const restOfGoodsValue = parseInt(form.getValues('restOfGoods'));
+  const turnoverValue = isSecond ? form.getValues('countPeople') * 5000000 : turnoverValueSource;
+  const choiceBusinessValue = parseInt(form.getValues('choiceBusiness')?.margin);
 
-  {
-    title: 'Команданын саны',
-    label: 'Сіздің команданың жалақысы',
-    labelTwo: 'Команданың ұсынылған жалақысы',
-    name: 'countPeople',
-    recomend: (form) => {
-      return (parseInt(form.getValues('turnover')) / 5000000).toFixed(2);
+  const recomendTurnover = turnoverValue;
+  const recomendMarginPercent = choiceBusinessValue;
+  const recomendSumProduct = turnoverValue - (turnoverValue * recomendMarginPercent) / 100;
+  const recomendRestOfGoods = recomendSumProduct / 2;
+  const recomendDuty = recomendRestOfGoods * 0.4;
+  const recomendMarketingPercent = 'от 2.5% до 3%';
+  const recomendMarketing = turnoverValue * (2.5 / 100);
+  const recomendDirty = turnoverValue - recomendSumProduct - recomendMarketing;
+  const recomendFlow = recomendDirty * 0.15;
+  const recomendCash = recomendDirty - recomendFlow;
+  const recomendCountPeople = turnoverValue / 5000000;
+  const recomendWage = recomendCash * 0.15;
+  const recomendCashOwner = recomendCash - recomendWage;
+
+  let recomendSecondTurnover = 0;
+  let recomendSecondMarginPercent = 0;
+  let recomendSecondSumProduct = 0;
+  let recomendSecondRestOfGoods = 0;
+  let recomendSecondDuty = 0;
+  let recomendSecondMarketingPercent = 0;
+  let recomendSecondMarketing = 0;
+  let recomendSecondDirty = 0;
+  let recomendSecondFlow = 0;
+  let recomendSecondCash = 0;
+  let recomendSecondCountPeople = 0;
+  let recomendSecondWage = 0;
+  let recomendSecondCashOwner = 0;
+  let isZeroCondition = restOfGoodsValue < recomendRestOfGoods;
+  if (isZeroCondition) {
+    recomendSecondTurnover = parseFloat((restOfGoodsValue / recomendRestOfGoods) * turnoverValueSource).toFixed(2);
+    recomendSecondMarginPercent = choiceBusinessValue;
+    recomendSecondSumProduct = recomendSecondTurnover - (recomendSecondTurnover * recomendSecondMarginPercent) / 100;
+    recomendSecondRestOfGoods = recomendSecondSumProduct / 2;
+    recomendSecondDuty = recomendSecondRestOfGoods * 0.4;
+    recomendSecondMarketingPercent = 'от 2.5% до 3%';
+    recomendSecondMarketing = recomendSecondTurnover * (2.5 / 100);
+    recomendSecondDirty = recomendSecondTurnover - recomendSecondSumProduct - recomendSecondMarketing;
+    recomendSecondFlow = recomendSecondDirty * 0.15;
+    recomendSecondCash = recomendSecondDirty - recomendSecondFlow;
+    recomendSecondCountPeople = recomendSecondTurnover / 5000000;
+    recomendSecondWage = recomendSecondCash * 0.15;
+    recomendSecondCashOwner = recomendSecondCash - recomendSecondWage;
+  }
+  const result = [
+    {
+      title: 'Айналым(оборот)',
+      label: 'Сіздің айдағы айналымыңыз',
+      labelTwo: 'Сізге ұсынылған айналым',
+      name: 'turnover',
+      isPrice: true,
+      recomend: (form) => {
+        return parseFloat(recomendTurnover).toFixed(2);
+      },
+      recomendSecond: (form) => {
+        return isZeroCondition ? parseFloat(recomendSecondTurnover).toFixed(2) : 0;
+      },
     },
-  },
-  {
-    title: 'Фонд оплата труда',
-    label: 'Сіздің командалық бонустарыңыз',
-    labelTwo: 'Команданың ұсынылған бонустары',
-    name: 'wage',
-    recomend: (form) => {
-      return (
-        ((parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100) - parseFloat(parseInt(form.getValues('turnover')) * (30 / 100)).toFixed(2)).toFixed(2) -
-          ((parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100) - parseFloat(parseInt(form.getValues('turnover')) * (30 / 100)).toFixed(2)).toFixed(2) * 0.15).toFixed(2)) *
-        0.15
-      ).toFixed(2);
+    {
+      title: 'Үстеме(наценка)',
+      label: 'Сіздің үстеме бағаңыз',
+      labelTwo: 'Сізге ұсынылған үстеме',
+      name: 'marginPercent',
+      recomend: (form) => {
+        return parseFloat(recomendMarginPercent).toFixed(2);
+      },
+      recomendSecond: (form) => {
+        return isZeroCondition ? parseFloat(recomendSecondMarginPercent).toFixed(2) : 0;
+      },
     },
-  },
-  {
-    title: 'Кэш владелца',
-    label: 'Сіздің командалық бонустарыңыз',
-    labelTwo: 'Команданың ұсынылған бонустары',
-    name: 'cashOwner',
-    isPrice: true,
-    recomend: (form) => {
-      return (
-        ((parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100) - parseFloat(parseInt(form.getValues('turnover')) * (30 / 100)).toFixed(2)).toFixed(2) -
-          ((parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) - (parseInt(form.getValues('turnover')) * parseInt(form.getValues('choiceBusiness')?.margin)) / 100) - parseFloat(parseInt(form.getValues('turnover')) * (30 / 100)).toFixed(2)).toFixed(2) * 0.15).toFixed(2)) *
-        0.15
-      ).toFixed(2);
+    {
+      title: 'Сумма товара',
+      label: 'Сіздің үстеме бағаңыз',
+      labelTwo: 'Сізге ұсынылған үстеме',
+      name: 'sumProduct',
+      isPrice: true,
+      recomend: (form) => {
+        return parseFloat(recomendSumProduct).toFixed(2);
+      },
+      recomendSecond: (form) => {
+        return isZeroCondition ? parseFloat(recomendSecondSumProduct).toFixed(2) : 0;
+      },
     },
-  },
-  {
-    title: 'Команда бонустары',
-    label: 'Сіздің командалық бонустарыңыз',
-    labelTwo: 'Команданың ұсынылған бонустары',
-    labelThird: 'Бонусы за месяц',
-    labelFour: 'Бонасы за обучение за квартал ',
-    labelFive: 'Бонус за год',
-    name: 'cashCommand',
-    isPrice: true,
-    recomend: (form) => {
-      return (parseInt(form.getValues('cash')) * 0.15).toFixed(2);
+    {
+      title: 'Тауардың қалдығы(остаток товара)',
+      label: 'Сіздің тауар қалдығыңыз',
+      labelTwo: 'Ұсынылған тауар қалдығы',
+      name: 'restOfGoods',
+      isPrice: true,
+      recomend: (form) => {
+        return parseFloat(recomendRestOfGoods).toFixed(2);
+      },
+      recomendSecond: (form) => {
+        return isZeroCondition ? parseFloat(recomendSecondRestOfGoods).toFixed(2) : 0;
+      },
     },
-    recomendSecond: (form) => {
-      return (parseInt(form.getValues('cash')) * 0.5).toFixed(2);
+    {
+      title: 'Оптовиктердің/поставщиктердің алдындағы қарыз(долг перед постащиками)',
+      label: 'Сіздің қарызыңыз',
+      labelTwo: 'Ұсынылған қарыз',
+      name: 'duty',
+      isPrice: true,
+      recomend: (form) => {
+        return parseFloat(recomendDuty).toFixed(2);
+      },
+      recomendSecond: (form) => {
+        return isZeroCondition ? parseFloat(recomendSecondDuty).toFixed(2) : 0;
+      },
     },
-    recomendThird: (form) => {
-      return (parseInt(form.getValues('cash')) * 0.5 * 3).toFixed(2);
+    {
+      title: 'Маркетинг в проценте',
+      label: 'Сіздің маркетингтік шығындарыңыз',
+      labelTwo: 'Ұсынылған маркетингтік шығындар',
+      name: 'marketingPercent',
+      recomend: (form) => {
+        return recomendMarketingPercent;
+      },
+      recomendSecond: (form) => {
+        return isZeroCondition ? recomendMarketingPercent : 0;
+      },
     },
-    recomendFour: (form) => {
-      return (parseInt(form.getValues('cash')) * 0.05 * 12).toFixed(2);
+    {
+      title: 'Маркетинг в тенге',
+      label: 'Сіздің маркетингтік шығындарыңыз',
+      labelTwo: 'Ұсынылған маркетингтік шығындар',
+      name: 'marketing',
+      isPrice: true,
+      recomend: (form) => {
+        return parseFloat(recomendMarketing).toFixed(2);
+      },
+      recomendSecond: (form) => {
+        return isZeroCondition ? parseFloat(recomendSecondMarketing).toFixed(2) : 0;
+      },
     },
-  },
-  {
-    title: 'Таза пайда',
-    label: 'Сіздің таза пайдаңыз',
-    labelTwo: 'Болу керек таза пайда',
-    name: 'netProfit',
-    isPrice: true,
-    recomend: (form) => {
-      return (parseInt(form.getValues('cash')) * 0.7).toFixed(2);
+    {
+      title: 'Грязная прибыль',
+      label: 'Грязная прибыль',
+      labelTwo: 'Ұсынылған маркетингтік шығындар',
+      name: 'dirty',
+      isPrice: true,
+      recomend: (form) => {
+        return parseFloat(recomendDirty).toFixed(2);
+      },
+      recomendSecond: (form) => {
+        return isZeroCondition ? parseFloat(recomendSecondDirty).toFixed(2) : 0;
+      },
     },
-  },
-  {
-    title: 'Реинвест',
-    label: 'Ваш Реинвест',
-    labelTwo: 'Рекомендованный реинвест',
-    name: 'reinvest',
-    isPrice: true,
-    recomend: (form) => {
-      return (parseInt(form.getValues('cash')) * 0.7 * 0.7).toFixed(2);
+    {
+      title: 'Расход',
+      label: 'Ваш расход',
+      labelTwo: 'Рекомендованный расход',
+      name: 'flow',
+      isPrice: true,
+      recomend: (form) => {
+        return parseFloat(recomendFlow).toFixed(2);
+      },
+      recomendSecond: (form) => {
+        return isZeroCondition ? parseFloat(recomendSecondFlow).toFixed(2) : 0;
+      },
     },
-  },
-  {
-    title: 'Кэшаут',
-    label: 'Ваш кэшаут',
-    labelTwo: 'Рекомендованный кэшаут',
-    name: 'cashOut',
-    isPrice: true,
-    recomend: (form) => {
-      return (parseInt(form.getValues('cash')) * 0.7 * 0.3).toFixed(2);
+    {
+      title: 'Кэш компании',
+      label: 'Сіздің команданың жалақысы',
+      labelTwo: 'Команданың ұсынылған жалақысы',
+      name: 'cash',
+      isPrice: true,
+      recomend: (form) => {
+        return parseFloat(recomendCash).toFixed(2);
+      },
+      recomendSecond: (form) => {
+        return isZeroCondition ? parseFloat(recomendSecondCash).toFixed(2) : 0;
+      },
     },
-  },
-];
+
+    {
+      title: 'Команданын саны',
+      label: 'Сіздің команданың жалақысы',
+      labelTwo: 'Команданың ұсынылған жалақысы',
+      name: 'countPeople',
+      recomend: (form) => {
+        return parseFloat(recomendCountPeople).toFixed(2);
+      },
+      recomendSecond: (form) => {
+        return isZeroCondition ? parseFloat(recomendSecondCountPeople).toFixed(2) : 0;
+      },
+    },
+    {
+      title: 'Фонд оплата труда',
+      label: 'Сіздің командалық бонустарыңыз',
+      labelTwo: 'Команданың ұсынылған бонустары',
+      name: 'wage',
+      isPrice: true,
+      recomend: (form) => {
+        return parseFloat(recomendWage).toFixed(2);
+      },
+      recomendSecond: (form) => {
+        return isZeroCondition ? parseFloat(recomendSecondWage).toFixed(2) : 0;
+      },
+    },
+    {
+      title: 'Кэш владелца',
+      label: 'Сіздің командалық бонустарыңыз',
+      labelTwo: 'Команданың ұсынылған бонустары',
+      name: 'cashOwner',
+      isPrice: true,
+      recomend: (form) => {
+        return parseFloat(recomendCashOwner).toFixed(2);
+      },
+      recomendSecond: (form) => {
+        return isZeroCondition ? parseFloat(recomendSecondCashOwner).toFixed(2) : 0;
+      },
+    },
+    {
+      title: 'Команда бонустары',
+      label: 'Сіздің командалық бонустарыңыз',
+      labelTwo: 'Команданың ұсынылған бонустары',
+      labelThird: 'Бонусы за месяц',
+      labelFour: 'Бонасы за обучение за квартал ',
+      labelFive: 'Бонус за год',
+      name: 'cashCommand',
+      isPrice: true,
+      recomend: (form) => {
+        return (parseInt(form.getValues('cash')) * 0.15).toFixed(2);
+      },
+      recomendSecond: (form) => {
+        return (parseInt(form.getValues('cash')) * 0.5).toFixed(2);
+      },
+      recomendThird: (form) => {
+        return (parseInt(form.getValues('cash')) * 0.5 * 3).toFixed(2);
+      },
+      recomendFour: (form) => {
+        return (parseInt(form.getValues('cash')) * 0.05 * 12).toFixed(2);
+      },
+    },
+    {
+      title: 'Таза пайда',
+      label: 'Сіздің таза пайдаңыз',
+      labelTwo: 'Болу керек таза пайда',
+      name: 'netProfit',
+      isPrice: true,
+      recomend: (form) => {
+        return (parseInt(form.getValues('cash')) * 0.7).toFixed(2);
+      },
+      recomendSecond: (form) => {
+        return isZeroCondition ? (parseInt(form.getValues('cash')) * 0.7).toFixed(2) : 0;
+      },
+    },
+    {
+      title: 'Реинвест',
+      label: 'Ваш Реинвест',
+      labelTwo: 'Рекомендованный реинвест',
+      name: 'reinvest',
+      isPrice: true,
+      recomend: (form) => {
+        return (parseInt(form.getValues('cash')) * 0.7 * 0.7).toFixed(2);
+      },
+      recomendSecond: (form) => {
+        return isZeroCondition ? (parseInt(form.getValues('cash')) * 0.7 * 0.7).toFixed(2) : 0;
+      },
+    },
+    {
+      title: 'Кэшаут',
+      label: 'Ваш кэшаут',
+      labelTwo: 'Рекомендованный кэшаут',
+      name: 'cashOut',
+      isPrice: true,
+      recomend: (form) => {
+        return (parseInt(form.getValues('cash')) * 0.7 * 0.3).toFixed(2);
+      },
+      recomendSecond: (form) => {
+        return isZeroCondition ? (parseInt(form.getValues('cash')) * 0.7 * 0.3).toFixed(2) : 0;
+      },
+    },
+  ];
+  return result;
+};
 
 const CourseStart = () => {
   const {
@@ -1000,7 +1089,7 @@ const CourseStart = () => {
           {activeStep == dataStep?.length && (
             <>
               <Box sx={{ fontSize: '24px', marginTop: '30px', fontWeight: '600', textAlign: 'center' }}>Оптимизация</Box>
-              {result?.map((itemResult) => (
+              {getCheckupData(pageForm)?.map((itemResult) => (
                 <Box sx={{ marginTop: '40px', padding: '24px 24px 24px 50px', borderRadius: '12px', border: '1px solid rgba(66, 130, 225, 0.15)', position: 'relative' }}>
                   <Box>
                     <Box sx={{ fontWeight: '600', fontSize: '20px', marginBottom: '25px' }}> {itemResult?.title}</Box>
@@ -1039,14 +1128,14 @@ const CourseStart = () => {
                   <Box sx={{ marginTop: '25px', height: '57px', background: 'rgba(66, 130, 225, 0.15)', borderRadius: '6px' }}> </Box>
                 </Box>
               ))}
-              {/* <Box sx={{ fontSize: '24px', marginTop: '30px', fontWeight: '600', textAlign: 'center' }}>Масштобирование</Box>
-              {result?.map((itemResult) => (
+              <Box sx={{ fontSize: '24px', marginTop: '30px', fontWeight: '600', textAlign: 'center' }}>Масштобирование</Box>
+              {getCheckupData(pageForm, true)?.map((itemResult) => (
                 <Box sx={{ marginTop: '40px', padding: '24px 24px 24px 50px', borderRadius: '12px', border: '1px solid rgba(66, 130, 225, 0.15)', position: 'relative' }}>
                   <Box>
                     <Box sx={{ fontWeight: '600', fontSize: '20px', marginBottom: '25px' }}> {itemResult?.title}</Box>
                     <Box sx={{ position: 'absolute', top: '15px', left: '22px', height: 'calc(100% - 30px)', width: '4px', borderRadius: '4px', background: '#4282E1' }}></Box>
                   </Box>
-                  <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: '25px' }}>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', columnGap: '25px' }}>
                     <label class={clsx('input-wrap')}>
                       <div className="input-lable input-label-required">{itemResult?.label}</div>
                       <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.name == 'cashCommand' ? 0 : pageForm.getValues(itemResult?.name)} />
@@ -1054,7 +1143,32 @@ const CourseStart = () => {
                     <Box>
                       <label class={clsx('input-wrap')}>
                         <div className="input-lable input-label-required">{itemResult?.labelTwo}</div>
+
                         <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomend(pageForm)} />
+                      </label>
+                      {itemResult?.name == 'cashCommand' && (
+                        <>
+                          {' '}
+                          <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                            <div className="input-lable input-label-required">{itemResult?.labelThird}</div>
+                            <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomendSecond(pageForm)} />
+                          </label>
+                          <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                            <div className="input-lable input-label-required">{itemResult?.labelFour}</div>
+                            <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomendThird(pageForm)} />
+                          </label>{' '}
+                          <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                            <div className="input-lable input-label-required">{itemResult?.labelFive}</div>
+                            <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomendFour(pageForm)} />
+                          </label>
+                        </>
+                      )}
+                    </Box>
+                    <Box>
+                      <label class={clsx('input-wrap')}>
+                        <div className="input-lable input-label-required">{itemResult?.labelTwo}</div>
+
+                        <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomendSecond(pageForm)} />
                       </label>
                       {itemResult?.name == 'cashCommand' && (
                         <>
@@ -1077,7 +1191,7 @@ const CourseStart = () => {
                   </Box>
                   <Box sx={{ marginTop: '25px', height: '57px', background: 'rgba(66, 130, 225, 0.15)', borderRadius: '6px' }}> </Box>
                 </Box>
-              ))} */}
+              ))}
             </>
           )}
           <Box ref={myRef}></Box>
