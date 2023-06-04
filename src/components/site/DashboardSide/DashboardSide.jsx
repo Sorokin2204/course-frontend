@@ -1,12 +1,18 @@
 import React from 'react';
 import styles from './DashboardSide.module.scss';
-import { Box, LinearProgress } from '@mui/material';
+import { Box, LinearProgress, useMediaQuery } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { ArrowBackIos } from '@mui/icons-material';
+import { useDispatch } from 'react-redux';
+import { setSettingStep } from '../../../redux/slices/app.slice';
+import { useNavigate } from 'react-router';
 const DashboardSide = () => {
   const {
     authUser: { data: auth },
   } = useSelector((state) => state.user);
+  const matches = useMediaQuery('(min-width:1100px)');
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   return (
     <Box sx={{ borderRadius: '12px', border: '1px solid #E0E0E0', background: '#FFFFFF', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '30px 24px 24px 24px' }}>
       {auth?.avatar ? (
@@ -65,6 +71,17 @@ const DashboardSide = () => {
       </Box>
       <Box sx={{ marginBottom: '12px', marginTop: '50px', fontSize: '16px', lineHeight: '24px', alignSelf: 'start' }}>Поддержка:</Box>
       <Box sx={{ alignSelf: 'stretch' }}>
+        {!matches && (
+          <Box
+            sx={{ marginBottom: '5px', border: '1px solid #E0E0E0', borderRadius: '8px', display: 'grid', gridTemplateColumns: 'auto 1fr auto', padding: '8px 16px', alignItems: 'center' }}
+            onClick={() => {
+              dispatch(setSettingStep(1));
+            }}>
+            <img src="/img/setting.svg" />
+            <Box sx={{ marginLeft: '12px' }}>Настройки</Box> <ArrowBackIos sx={{ transform: 'rotate(180deg)', color: '#828282', fontSize: '14px' }} />
+          </Box>
+        )}
+
         <Box sx={{ border: '1px solid #E0E0E0', borderRadius: '8px', display: 'grid', gridTemplateColumns: 'auto 1fr auto', padding: '8px 16px', alignItems: 'center' }}>
           <img src="/img/headset.svg" />
           <Box sx={{ marginLeft: '12px' }}>Поддержка</Box> <ArrowBackIos sx={{ transform: 'rotate(180deg)', color: '#828282', fontSize: '14px' }} />
@@ -72,6 +89,17 @@ const DashboardSide = () => {
         <Box sx={{ marginTop: '5px', border: '1px solid #E0E0E0', borderRadius: '8px', display: 'grid', gridTemplateColumns: 'auto 1fr auto', padding: '8px 16px', alignItems: 'center' }}>
           <img src="/img/group.svg" />
           <Box sx={{ marginLeft: '12px' }}>Достарыңды шақыр</Box> <ArrowBackIos sx={{ transform: 'rotate(180deg)', color: '#828282', fontSize: '14px' }} />
+        </Box>
+        <Box
+          sx={{ marginTop: '5px', border: '1px solid #E0E0E0', borderRadius: '8px', display: 'grid', gridTemplateColumns: 'auto 1fr auto', padding: '8px 16px', alignItems: 'center' }}
+          onClick={() => {
+            localStorage.removeItem('token');
+            navigate('/');
+            // dispatch(authUser());
+          }}>
+          <img src="/img/exit.svg" />
+          <Box sx={{ marginLeft: '12px' }}>Выход</Box>
+          <ArrowBackIos sx={{ transform: 'rotate(180deg)', color: '#828282', fontSize: '14px' }} />
         </Box>
         <Box sx={{ marginTop: '5px', border: '1px solid #E0E0E0', borderRadius: '8px', display: 'grid', gridTemplateColumns: 'auto 1fr auto', padding: '8px 16px', alignItems: 'center' }}>
           <img src="/img/delete.svg" />

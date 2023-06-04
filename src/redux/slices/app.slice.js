@@ -11,6 +11,7 @@ export const initialState = {
   auth: undefined,
   activeModal: '',
   activeChapter: 0,
+  settingStep: 0,
 };
 
 export const appSlice = createSlice({
@@ -19,6 +20,9 @@ export const appSlice = createSlice({
   reducers: {
     setActiveChapter(state, action) {
       state.activeChapter = action.payload;
+    },
+    setSettingStep(state, action) {
+      state.settingStep = action.payload;
     },
     setAuth(state, action) {
       state.auth = action.payload;
@@ -34,5 +38,5 @@ export const appSlice = createSlice({
     ...reducerGetWhereSale,
   },
 });
-export const { setAuth, setActiveModal, setActiveChapter } = appSlice.actions;
+export const { setAuth, setActiveModal, setActiveChapter, setSettingStep } = appSlice.actions;
 export const appReducer = appSlice.reducer;

@@ -339,6 +339,11 @@ a {
   font-size: 20px;
   color: rgba(0, 0, 0, 0.85);
 }
+@media (max-width: 1100px) {
+  .checkbox-custom {
+    font-size: 16px;
+  }
+}
 .checkbox-custom div {
   width: 16px;
   height: 16px;

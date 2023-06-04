@@ -680,7 +680,7 @@ const getCheckupData = (form, isSecond = false) => {
   let recomendSecondCountPeople = 0;
   let recomendSecondWage = 0;
   let recomendSecondCashOwner = 0;
-  let isZeroCondition = restOfGoodsValue < recomendRestOfGoods;
+  let isZeroCondition = restOfGoodsValue > recomendRestOfGoods;
   if (isZeroCondition) {
     recomendSecondTurnover = parseFloat((restOfGoodsValue / recomendRestOfGoods) * turnoverValueSource).toFixed(2);
     recomendSecondMarginPercent = choiceBusinessValue;

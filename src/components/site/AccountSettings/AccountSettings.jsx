@@ -1,5 +1,5 @@
 import { Add, Close, Delete, Person, Upload } from '@mui/icons-material';
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button, TextField, useMediaQuery } from '@mui/material';
 import axios from 'axios';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -74,15 +74,16 @@ const AccountSettings = () => {
     }
   }, [auth]);
   const uploadInputRef = useRef(null);
+  const matches = useMediaQuery('(min-width:1100px)');
   const [activeTab, setActiveTab] = useState('setting');
   return (
     <Box>
-      <Box sx={{ borderRadius: '12px', border: '1px solid #E0E0E0', background: '#FFFFFF', padding: '30px 24px 24px 24px' }}>
+      <Box sx={{ ...(matches && { borderRadius: '12px', border: '1px solid #E0E0E0', background: '#FFFFFF', padding: '30px 24px 24px 24px' }) }}>
         <Box
           sx={{
             fontSize: '24px',
             lineHeight: '36px',
-
+            display: { mob: 'none', desk: 'block' },
             letterSpacing: '-0.01em',
 
             color: '#000000',
@@ -90,7 +91,7 @@ const AccountSettings = () => {
           }}>
           Профиль параметрлері
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ display: { mob: 'none', desk: 'flex' }, alignItems: 'center' }}>
           <Box
             sx={{ paddingBottom: '15px', marginRight: '35px', position: 'relative', cursor: 'pointer', userSelect: 'none', transition: 'color 0.3s', color: activeTab == 'setting' ? '#1890FF' : 'rgba(0, 0, 0, 0.85)' }}
             onClick={() => {
@@ -170,7 +171,7 @@ const AccountSettings = () => {
           )}
         </Box> */}
         </Box>{' '}
-        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr ', columnGap: '15px', rowGap: '20px' }}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { mob: '1fr', desk: '1fr 1fr ' }, columnGap: '15px', rowGap: '20px' }}>
           <InputCustom
             styleLabel={{
               fontSize: '16px',
@@ -330,7 +331,7 @@ const AccountSettings = () => {
             name={'passwordRepeat'}
             errorText={settingForm?.errors?.passwordRepeat && 'Пароль не совподает'}
           />
-          <div style={{ gridColumn: '1/3' }}>
+          <Box style={{ ...(matches && { gridColumn: '1/3' }) }}>
             <InputCustom
               styleLabel={{
                 fontSize: '16px',
@@ -346,7 +347,7 @@ const AccountSettings = () => {
               isTextarea
               errorText={settingForm?.errors?.about && 'Заполните поле'}
             />
-          </div>
+          </Box>
           <input
             style={{ display: 'none', visibility: 'hidden' }}
             ref={uploadInputRef}
@@ -357,13 +358,13 @@ const AccountSettings = () => {
             }}
           />
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginTop: '20px' }}>
+        <Box sx={{ display: 'flex', flexDirection: { mob: 'column-reverse', desk: 'row' }, alignItems: { mob: 'stretch', desk: 'center' }, justifyContent: 'flex-end', marginTop: '20px' }}>
           {' '}
-          <ButtonCustom style={{ marginRight: '15px' }} error onClick={settingForm.handleSubmit(onSubmit)}>
+          <ButtonCustom style={{ ...(matches ? { marginRight: '15px' } : { marginTop: '10px' }) }} error onClick={settingForm.handleSubmit(onSubmit)}>
             Отмена
           </ButtonCustom>
           <ButtonCustom disabled={updateUserLoading} onClick={settingForm.handleSubmit(onSubmit)}>
-            Сохранить настройки профиля
+            Сохранить {matches && <>настройки профиля</>}
           </ButtonCustom>
         </Box>{' '}
       </Box>
