@@ -5,17 +5,18 @@ import RatingBlock from './RatingBlock';
 export const getTypeComponents = ({ valueStatus, status, fields, title, name, type, value, avatar }, form, activeSteps, activeIndex, index) => {
   switch (type) {
     case 'title':
-      return <Box sx={{ fontWeight: '600', fontSize: '16px' }}>{value}</Box>;
+      return <Box sx={{ fontWeight: '600', fontSize: { mob: '14px', desk: '16px' } }}>{value}</Box>;
     case 'chat':
     case 'chat-self': {
       let statusValue = status?.(form);
       return (
-        <Box sx={{ fontSize: '16px', display: 'flex', alignItems: 'start', justifyContent: 'flex-end', flexDirection: type == 'chat-self' ? 'row' : 'row-reverse', paddingTop: avatar ? '40px' : '10px' }}>
+        <Box sx={{ fontSize: { mob: '14px', desk: '16px' }, display: 'flex', alignItems: 'start', justifyContent: 'flex-end', flexDirection: type == 'chat-self' ? 'row' : 'row-reverse', paddingTop: { mob: avatar ? '25px' : '10px', desk: avatar ? '40px' : '10px' } }}>
           <Box
             sx={{
+              maxWidth: 'calc(100% - 100px)',
               position: 'relative',
-              ...(type == 'chat-self' ? { marginRight: '20px' } : { marginLeft: '20px' }),
-              padding: `15px 18px 15px ${statusValue ? '40px' : '24px'}`,
+              ...(type == 'chat-self' ? { marginRight: '20px' } : { marginLeft: { mob: '13px', desk: '20px' } }),
+              padding: { mob: `${type == 'chat-self' ? '10px' : '15px'} 18px 15px ${statusValue ? '40px' : '18px'}`, desk: `${type == 'chat-self' ? '10px' : '15px'} 18px 15px ${statusValue ? '40px' : '24px'}` },
               borderRadius: '6px',
               background: type == 'chat-self' ? '#4282E1' : '#DFE9F7',
               color: type == 'chat-self' ? '#fff' : '#000',
@@ -44,7 +45,7 @@ export const getTypeComponents = ({ valueStatus, status, fields, title, name, ty
 
     case 'inputs': {
       return (
-        <Box sx={{ marginTop: '40px', padding: '24px 24px 32px 24px', borderRadius: '12px', border: '1px solid rgba(66, 130, 225, 0.15)' }}>
+        <Box sx={{ marginTop: { mob: '25px', desk: '40px' }, padding: { mob: '24px 6px', desk: '24px 24px 32px 24px' }, borderRadius: '12px', border: '1px solid rgba(66, 130, 225, 0.15)' }}>
           <Box>
             <Box sx={{ fontWeight: '600', fontSize: '20px', marginBottom: '25px' }}> {title}</Box>
 

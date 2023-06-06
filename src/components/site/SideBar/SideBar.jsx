@@ -55,38 +55,54 @@ const SideBar = () => {
           </>
         ) : pathname === '/list' ? (
           <Box sx={{ margin: '0 auto' }}>Все инструменты</Box>
+        ) : pathname === '/list/audit' ? (
+          <BtnBack
+            onClick={() => {
+              navigate('/list');
+            }}>
+            Аудит
+          </BtnBack>
+        ) : pathname === '/list/audit/start' ? (
+          <BtnBack
+            onClick={() => {
+              navigate('/list/audit');
+            }}>
+            Назад
+          </BtnBack>
         ) : (
           <></>
         )}
       </Box>
-      <Box
-        sx={{
-          position: 'fixed',
-          bottom: '0',
-          zIndex: '100',
-          background: '#fff',
-          left: 0,
-          boxShadow: '0px -4px 10px rgba(0, 0, 0, 0.1)',
-          height: '73px',
-          width: '100%',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4,26px)',
-          alignItems: 'center',
-          justifyContent: 'space-around',
-        }}>
-        <Box sx={{ width: '26px', height: '26px', WebkitMaskPosition: '50% 50%', WebkitMaskImage: `url('img/dashboard.svg')`, WebkitMaskSize: 'contain', backgroundColor: '#828282', marginRight: '10px', transition: 'all 0.3s' }}></Box>
+      {pathname != '/list/audit/start' && (
         <Box
-          onClick={() => {
-            navigate('/list');
-          }}
-          sx={{ width: '26px', height: '26px', WebkitMaskPosition: '50% 50%', WebkitMaskImage: `url('img/book.svg')`, WebkitMaskSize: 'contain', backgroundColor: '#828282', marginRight: '10px', transition: 'all 0.3s', ...(pathname == '/list' && { backgroundColor: '#4282E1' }) }}></Box>
-        <Box sx={{ width: '26px', height: '26px', WebkitMaskPosition: '50% 50%', WebkitMaskImage: `url('img/bookmark.svg')`, WebkitMaskSize: 'contain', backgroundColor: '#828282', marginRight: '10px', transition: 'all 0.3s', ...(pathname == '/list-2' && { backgroundColor: '#4282E1' }) }}></Box>
-        <Box
-          onClick={() => {
-            navigate('/dashboard');
-          }}
-          sx={{ width: '26px', height: '26px', WebkitMaskPosition: '50% 50%', WebkitMaskImage: `url('img/account.svg')`, WebkitMaskSize: 'contain', backgroundColor: '#828282', marginRight: '10px', transition: 'all 0.3s', ...(pathname == '/dashboard' && { backgroundColor: '#4282E1' }) }}></Box>
-      </Box>
+          sx={{
+            position: 'fixed',
+            bottom: '0',
+            zIndex: '100',
+            background: '#fff',
+            left: 0,
+            boxShadow: '0px -4px 10px rgba(0, 0, 0, 0.1)',
+            height: '73px',
+            width: '100%',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4,26px)',
+            alignItems: 'center',
+            justifyContent: 'space-around',
+          }}>
+          <Box sx={{ width: '26px', height: '26px', WebkitMaskPosition: '50% 50%', WebkitMaskImage: `url('/img/dashboard.svg')`, WebkitMaskSize: 'contain', backgroundColor: '#828282', marginRight: '10px', transition: 'all 0.3s' }}></Box>
+          <Box
+            onClick={() => {
+              navigate('/list');
+            }}
+            sx={{ width: '26px', height: '26px', WebkitMaskPosition: '50% 50%', WebkitMaskImage: `url('/img/book.svg')`, WebkitMaskSize: 'contain', backgroundColor: '#828282', marginRight: '10px', transition: 'all 0.3s', ...(pathname == '/list' && { backgroundColor: '#4282E1' }) }}></Box>
+          <Box sx={{ width: '26px', height: '26px', WebkitMaskPosition: '50% 50%', WebkitMaskImage: `url('/img/bookmark.svg')`, WebkitMaskSize: 'contain', backgroundColor: '#828282', marginRight: '10px', transition: 'all 0.3s', ...(pathname == '/list-2' && { backgroundColor: '#4282E1' }) }}></Box>
+          <Box
+            onClick={() => {
+              navigate('/dashboard');
+            }}
+            sx={{ width: '26px', height: '26px', WebkitMaskPosition: '50% 50%', WebkitMaskImage: `url('/img/account.svg')`, WebkitMaskSize: 'contain', backgroundColor: '#828282', marginRight: '10px', transition: 'all 0.3s', ...(pathname == '/dashboard' && { backgroundColor: '#4282E1' }) }}></Box>
+        </Box>
+      )}
     </>
   ) : (
     <>

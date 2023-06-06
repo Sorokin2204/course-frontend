@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router';
 import clsx from 'clsx';
 
-import { Box } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import { Transition } from 'react-transition-group';
 import { getTypeComponents } from '../../components/site/getTypeComponents';
 import AnimateHeight from 'react-animate-height';
@@ -1048,18 +1048,19 @@ const CourseStart = () => {
     }
   }, [getNameBusinessData, getTypeBusinessData, getTypeOfSaleData, getWhereSaleData]);
   console.log(activeStep);
+  const matches = useMediaQuery('(min-width:1100px)');
   return (
     <>
       {!getResultLoading && (
         <Box sx={{ paddingBottom: '44px', marginBottom: '40px' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{ fontWeight: '600', fontSize: '24px', marginRight: '25px' }}>Аудит бизнеса</Box>
+          <Box sx={{ display: 'flex', flexDirection: { mob: 'column', desk: 'row' }, alignItems: { mob: 'start', desk: 'center' } }}>
+            <Box sx={{ marginBottom: { mob: '8px', desk: '0' }, fontWeight: '600', fontSize: { mob: '20px', desk: '24px' }, marginRight: { mob: '20px', desk: '25px' } }}>Аудит бизнеса</Box>
             <Box sx={{ display: 'flex', alignItems: 'center', color: '#4282E1' }}>
-              <img src="/img/clock.svg" style={{ marginRight: '5px' }} />
+              <img src="/img/clock.svg" style={{ marginRight: '5px', ...(!matches && { width: '15px' }) }} />
               150 мин.
             </Box>
           </Box>
-          <Box sx={{ marginTop: '24px', paddingBottom: '24px', borderBottom: '1px solid #E0E0E0', marginBottom: '24px' }}>
+          <Box sx={{ marginTop: '24px', paddingBottom: '24px', borderBottom: '1px solid #E0E0E0', marginBottom: '24px', lineHeight: '22px' }}>
             Сәлем Айбек! Мен-Бақтияр Өсербекұлы, 20–жылдық тәжірибесі бар бизнес-практик қарапайым тілмен айтқанда бизнестің механигімін және жүйелі басқарудан жетекшімін. Сізді біздің платформада қарсы алғаныма қуаныштымын!
           </Box>
           {dataStep?.map((item, itemIndex) => {
@@ -1078,7 +1079,7 @@ const CourseStart = () => {
             );
           })}
           {dataStep?.length > activeStep && (
-            <Box sx={{ width: 'calc(100% - 375px)', position: 'fixed', padding: '0 28px 35px 28px', bottom: '0px', right: '0px', background: '#FBFBFB' }}>
+            <Box sx={{ width: { mob: '100%', desk: 'calc(100% - 375px)' }, position: 'fixed', padding: '0 28px 35px 28px', bottom: '0px', right: '0px', background: '#FBFBFB' }}>
               <button style={{ border: 'none', color: '#fff', background: '#4282E1', borderRadius: '5px', height: '44px', width: '100%', fontSize: '16px', cursor: 'pointer' }} onClick={pageForm.handleSubmit(onSubmit)}>
                 Жалғастыру
               </button>
@@ -1090,12 +1091,12 @@ const CourseStart = () => {
             <>
               <Box sx={{ fontSize: '24px', marginTop: '30px', fontWeight: '600', textAlign: 'center' }}>Оптимизация</Box>
               {getCheckupData(pageForm)?.map((itemResult) => (
-                <Box sx={{ marginTop: '40px', padding: '24px 24px 24px 50px', borderRadius: '12px', border: '1px solid rgba(66, 130, 225, 0.15)', position: 'relative' }}>
+                <Box sx={{ marginTop: { mob: '20px', desk: '40px' }, padding: { mob: '24px 6px', desk: '24px 24px 24px 50px' }, borderRadius: '12px', border: '1px solid rgba(66, 130, 225, 0.15)', position: 'relative' }}>
                   <Box>
                     <Box sx={{ fontWeight: '600', fontSize: '20px', marginBottom: '25px' }}> {itemResult?.title}</Box>
-                    <Box sx={{ position: 'absolute', top: '15px', left: '22px', height: 'calc(100% - 30px)', width: '4px', borderRadius: '4px', background: '#4282E1' }}></Box>
+                    <Box sx={{ display: { mob: 'none', desk: 'block' }, position: 'absolute', top: '15px', left: '22px', height: 'calc(100% - 30px)', width: '4px', borderRadius: '4px', background: '#4282E1' }}></Box>
                   </Box>
-                  <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: '25px' }}>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { mob: '1fr', desk: '1fr 1fr' }, gap: '25px' }}>
                     <label class={clsx('input-wrap')}>
                       <div className="input-lable input-label-required">{itemResult?.label}</div>
                       <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.name == 'cashCommand' ? 0 : pageForm.getValues(itemResult?.name)} />
@@ -1109,15 +1110,15 @@ const CourseStart = () => {
                       {itemResult?.name == 'cashCommand' && (
                         <>
                           {' '}
-                          <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                          <label class={clsx('input-wrap')} style={{ marginTop: !matches ? '25px' : '10px', display: 'block' }}>
                             <div className="input-lable input-label-required">{itemResult?.labelThird}</div>
                             <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomendSecond(pageForm)} />
                           </label>
-                          <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                          <label class={clsx('input-wrap')} style={{ marginTop: !matches ? '25px' : '10px', display: 'block' }}>
                             <div className="input-lable input-label-required">{itemResult?.labelFour}</div>
                             <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomendThird(pageForm)} />
                           </label>{' '}
-                          <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                          <label class={clsx('input-wrap')} style={{ marginTop: !matches ? '25px' : '10px', display: 'block' }}>
                             <div className="input-lable input-label-required">{itemResult?.labelFive}</div>
                             <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomendFour(pageForm)} />
                           </label>
@@ -1130,17 +1131,19 @@ const CourseStart = () => {
               ))}
               <Box sx={{ fontSize: '24px', marginTop: '30px', fontWeight: '600', textAlign: 'center' }}>Масштобирование</Box>
               {getCheckupData(pageForm, true)?.map((itemResult) => (
-                <Box sx={{ marginTop: '40px', padding: '24px 24px 24px 50px', borderRadius: '12px', border: '1px solid rgba(66, 130, 225, 0.15)', position: 'relative' }}>
+                <Box sx={{ marginTop: { mob: '20px', desk: '40px' }, padding: { mob: '24px 6px', desk: '24px 24px 24px 50px' }, borderRadius: '12px', border: '1px solid rgba(66, 130, 225, 0.15)', position: 'relative' }}>
                   <Box>
                     <Box sx={{ fontWeight: '600', fontSize: '20px', marginBottom: '25px' }}> {itemResult?.title}</Box>
-                    <Box sx={{ position: 'absolute', top: '15px', left: '22px', height: 'calc(100% - 30px)', width: '4px', borderRadius: '4px', background: '#4282E1' }}></Box>
+                    <Box sx={{ display: { mob: 'none', desk: 'block' }, position: 'absolute', top: '15px', left: '22px', height: 'calc(100% - 30px)', width: '4px', borderRadius: '4px', background: '#4282E1' }}></Box>
                   </Box>
-                  <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', columnGap: '25px' }}>
-                    <label class={clsx('input-wrap')}>
-                      <div className="input-lable input-label-required">{itemResult?.label}</div>
-                      <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.name == 'cashCommand' ? 0 : pageForm.getValues(itemResult?.name)} />
-                    </label>
-                    <Box>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { mob: '1fr', desk: '1fr 1fr 1fr' }, columnGap: '25px' }}>
+                    <Box sx={{}}>
+                      <label class={clsx('input-wrap')}>
+                        <div className="input-lable input-label-required">{itemResult?.label}</div>
+                        <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.name == 'cashCommand' ? 0 : pageForm.getValues(itemResult?.name)} />
+                      </label>
+                    </Box>
+                    <Box sx={{ marginTop: { mob: '25px', desk: '0' } }}>
                       <label class={clsx('input-wrap')}>
                         <div className="input-lable input-label-required">{itemResult?.labelTwo}</div>
 
@@ -1149,22 +1152,22 @@ const CourseStart = () => {
                       {itemResult?.name == 'cashCommand' && (
                         <>
                           {' '}
-                          <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                          <label class={clsx('input-wrap')} style={{ marginTop: !matches ? '25px' : '10px', display: 'block' }}>
                             <div className="input-lable input-label-required">{itemResult?.labelThird}</div>
                             <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomendSecond(pageForm)} />
                           </label>
-                          <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                          <label class={clsx('input-wrap')} style={{ marginTop: !matches ? '25px' : '10px', display: 'block' }}>
                             <div className="input-lable input-label-required">{itemResult?.labelFour}</div>
                             <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomendThird(pageForm)} />
                           </label>{' '}
-                          <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                          <label class={clsx('input-wrap')} style={{ marginTop: !matches ? '25px' : '10px', display: 'block' }}>
                             <div className="input-lable input-label-required">{itemResult?.labelFive}</div>
                             <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomendFour(pageForm)} />
                           </label>
                         </>
                       )}
                     </Box>
-                    <Box>
+                    <Box sx={{ marginTop: { mob: '25px', desk: '0' } }}>
                       <label class={clsx('input-wrap')}>
                         <div className="input-lable input-label-required">{itemResult?.labelTwo}</div>
 
@@ -1173,15 +1176,15 @@ const CourseStart = () => {
                       {itemResult?.name == 'cashCommand' && (
                         <>
                           {' '}
-                          <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                          <label class={clsx('input-wrap')} style={{ marginTop: !matches ? '25px' : '10px', display: 'block' }}>
                             <div className="input-lable input-label-required">{itemResult?.labelThird}</div>
                             <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomendSecond(pageForm)} />
                           </label>
-                          <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                          <label class={clsx('input-wrap')} style={{ marginTop: !matches ? '25px' : '10px', display: 'block' }}>
                             <div className="input-lable input-label-required">{itemResult?.labelFour}</div>
                             <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomendThird(pageForm)} />
                           </label>{' '}
-                          <label class={clsx('input-wrap')} style={{ marginTop: '10px', display: 'block' }}>
+                          <label class={clsx('input-wrap')} style={{ marginTop: !matches ? '25px' : '10px', display: 'block' }}>
                             <div className="input-lable input-label-required">{itemResult?.labelFive}</div>
                             <NumericFormat {...(itemResult?.isPrice && { suffix: ' тг', thousandSeparator: ',' })} className="input-custom" disabled={true} value={itemResult?.recomendFour(pageForm)} />
                           </label>
