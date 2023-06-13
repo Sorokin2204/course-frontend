@@ -2,7 +2,7 @@ import { createAsyncThunk, current } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export const initStateGetTypeBusiness = {
-  getTypeBusiness: { data: null, loading: false, error: null },
+  getTypeBusiness: { data: [], loading: false, error: null },
 };
 
 export const getTypeBusiness = createAsyncThunk('user/getTypeBusiness', async (data, { rejectWithValue, fulfillWithValue }) => {

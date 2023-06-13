@@ -652,14 +652,15 @@ const getCheckupData = (form, isSecond = false) => {
   const restOfGoodsValue = parseInt(form.getValues('restOfGoods'));
   const turnoverValue = isSecond ? form.getValues('countPeople') * 5000000 : turnoverValueSource;
   const choiceBusinessValue = parseInt(form.getValues('choiceBusiness')?.margin);
-
+  const choiceBusinessMarketing = parseFloat(form.getValues('choiceBusiness')?.marketing);
+  const choiceBusinessMarketingText = form.getValues('choiceBusiness')?.marketingText;
   const recomendTurnover = turnoverValue;
   const recomendMarginPercent = choiceBusinessValue;
   const recomendSumProduct = turnoverValue - (turnoverValue * recomendMarginPercent) / 100;
   const recomendRestOfGoods = recomendSumProduct / 2;
   const recomendDuty = recomendRestOfGoods * 0.4;
-  const recomendMarketingPercent = 'от 2.5% до 3%';
-  const recomendMarketing = turnoverValue * (2.5 / 100);
+  const recomendMarketingPercent = choiceBusinessMarketingText;
+  const recomendMarketing = turnoverValue * (choiceBusinessMarketing / 100);
   const recomendDirty = turnoverValue - recomendSumProduct - recomendMarketing;
   const recomendFlow = recomendDirty * 0.15;
   const recomendCash = recomendDirty - recomendFlow;
@@ -687,8 +688,8 @@ const getCheckupData = (form, isSecond = false) => {
     recomendSecondSumProduct = recomendSecondTurnover - (recomendSecondTurnover * recomendSecondMarginPercent) / 100;
     recomendSecondRestOfGoods = recomendSecondSumProduct / 2;
     recomendSecondDuty = recomendSecondRestOfGoods * 0.4;
-    recomendSecondMarketingPercent = 'от 2.5% до 3%';
-    recomendSecondMarketing = recomendSecondTurnover * (2.5 / 100);
+    recomendSecondMarketingPercent = choiceBusinessMarketingText;
+    recomendSecondMarketing = recomendSecondTurnover * (choiceBusinessMarketing / 100);
     recomendSecondDirty = recomendSecondTurnover - recomendSecondSumProduct - recomendSecondMarketing;
     recomendSecondFlow = recomendSecondDirty * 0.15;
     recomendSecondCash = recomendSecondDirty - recomendSecondFlow;

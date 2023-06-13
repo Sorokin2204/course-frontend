@@ -3,11 +3,13 @@ import { initStateGetNameBusiness, reducerGetNameBusiness } from '../actions/dat
 import { initStateGetTypeBusiness, reducerGetTypeBusiness } from '../actions/data/getTypeBusiness';
 import { initStateGetTypeOfSale, reducerGetTypeOfSale } from '../actions/data/getTypeOfSale';
 import { initStateGetWhereSale, reducerGetWhereSale } from '../actions/data/getWhereSale';
+import { initStateUpsertTypeBusiness, reducerUpsertTypeBusiness } from '../actions/data/upsertTypeBusiness';
 export const initialState = {
   ...initStateGetNameBusiness,
   ...initStateGetTypeBusiness,
   ...initStateGetTypeOfSale,
   ...initStateGetWhereSale,
+  ...initStateUpsertTypeBusiness,
   auth: undefined,
   activeModal: '',
   activeChapter: 0,
@@ -36,6 +38,7 @@ export const appSlice = createSlice({
     ...reducerGetTypeBusiness,
     ...reducerGetTypeOfSale,
     ...reducerGetWhereSale,
+    ...reducerUpsertTypeBusiness,
   },
 });
 export const { setAuth, setActiveModal, setActiveChapter, setSettingStep } = appSlice.actions;

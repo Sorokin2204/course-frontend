@@ -8,6 +8,10 @@ import HomePage from './pages/site/HomePage';
 import CourseList from './pages/site/CourseList';
 import CourseSingle from './pages/site/CourseSingle';
 import CourseStart from './pages/site/CourseStart';
+import AdminLayout from './components/admin/AdminLayout/AdminLayout';
+import AdminUsers from './pages/admin/AdminUsers/AdminUsers';
+import AdminTypeBusiness from './pages/admin/AdminTypeBusiness/AdminTypeBusiness';
+import AdminNameBusiness from './pages/admin/AdminNameBusiness/AdminNameBusiness';
 
 function App() {
   let routes = useRoutes([
@@ -26,6 +30,30 @@ function App() {
         <SiteLayout>
           <AccountPage />
         </SiteLayout>
+      ),
+    },
+    {
+      path: '/admin/users',
+      element: (
+        <AdminLayout>
+          <AdminUsers />
+        </AdminLayout>
+      ),
+    },
+    {
+      path: '/admin/types-of-business',
+      element: (
+        <AdminLayout>
+          <AdminTypeBusiness />
+        </AdminLayout>
+      ),
+    },
+    {
+      path: '/admin/business-list',
+      element: (
+        <AdminLayout>
+          <AdminNameBusiness />
+        </AdminLayout>
       ),
     },
     {
