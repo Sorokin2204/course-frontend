@@ -28,6 +28,9 @@ const CourseInfo = () => {
   const navigate = useNavigate();
   const matches = useMediaQuery('(min-width:1100px)');
   const { activeChapter } = useSelector((state) => state.app);
+  const {
+    authUser: { data: auth },
+  } = useSelector((state) => state.user);
   return (
     <Box
       sx={{
@@ -68,13 +71,24 @@ const CourseInfo = () => {
       <Box sx={{ marginBottom: '25px', fontSize: { mob: '14px', desk: '16px' }, lineHeight: { mob: '22px', desk: '26px' } }}>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur ex dolorem porro maxime velit praesentium possimus, perferendis, enim et rem deserunt libero, error ut similique. Impedit repellendus officia ab veniam!
       </Box>
-      <ButtonCustom
-        onClick={() => {
-          navigate('/list/audit/start');
-        }}
-        style={{ width: '100%', marginBottom: matches ? '40px' : '30px' }}>
-        Қайта өту
-      </ButtonCustom>
+      {auth?.activeCourse ? (
+        <ButtonCustom
+          onClick={() => {
+            navigate('/list/audit/start');
+          }}
+          style={{ width: '100%', marginBottom: matches ? '40px' : '30px' }}>
+          Қайта өту
+        </ButtonCustom>
+      ) : (
+        <ButtonCustom
+          onClick={() => {
+            window.location.href = 'https://wa.me/87068368442';
+            // navigate('/list/audit/start');
+          }}
+          style={{ width: '100%', marginBottom: matches ? '40px' : '30px' }}>
+          сатып алу
+        </ButtonCustom>
+      )}
       <Box>
         <Box sx={{ fontWeight: '600', fontSize: '20px', lineHeight: '30px', marginBottom: '15px' }}>Автор</Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>

@@ -126,15 +126,28 @@ const SiteLayout = ({ children }) => {
       navigate('/');
     }
   }, [authUserError]);
-
+  useEffect(() => {
+    if (!authUserData?.activeCourse && pathname == '/list/audit/start') {
+      navigate('/list/audit');
+    }
+  }, [authUserData]);
+  useEffect(() => {
+    if (authUserData?.role == 'admin') {
+      navigate('/admin/users');
+    }
+  }, [authUserData]);
   return (
     <>
-      <ThemeProvider theme={darkTheme}>
-        <Box sx={{ width: '100vw', display: 'grid', gridTemplateColumns: { mob: '1fr', desk: '375px 1fr' }, minHeight: '100vh', justifyContent: 'stretch' }}>
-          <SideBar />
-          <Box sx={{ padding: { mob: '82px 16px 102px 16px', desk: '38px 28px 35px 28px' }, background: { mob: '#fff', desk: '#FBFBFB' } }}>{authUserData ? <div>{children}</div> : <div></div>}</Box>
-        </Box>
-      </ThemeProvider>
+      {authUserData?.role == 'user' ? (
+        <ThemeProvider theme={darkTheme}>
+          <Box sx={{ width: '100vw', display: 'grid', gridTemplateColumns: { mob: '1fr', desk: '375px 1fr' }, minHeight: '100vh', justifyContent: 'stretch' }}>
+            <SideBar />
+            <Box sx={{ padding: { mob: '82px 16px 102px 16px', desk: '38px 28px 35px 28px' }, background: { mob: '#fff', desk: '#FBFBFB' } }}>{authUserData ? <div>{children}</div> : <div></div>}</Box>
+          </Box>
+        </ThemeProvider>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

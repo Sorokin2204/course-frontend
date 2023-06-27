@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import InputCustom from './InputCustom/InputCustom';
 import RatingBlock from './RatingBlock';
+import ReactPlayer from 'react-player';
 
 export const getTypeComponents = ({ valueStatus, status, fields, title, name, type, value, avatar }, form, activeSteps, activeIndex, index) => {
   switch (type) {
@@ -78,7 +79,17 @@ export const getTypeComponents = ({ valueStatus, status, fields, title, name, ty
       return <RatingBlock />;
     }
     case 'video': {
-      return <img style={{ width: '100%', marginTop: '40px' }} src="/img/video.png" />;
+      return (
+        <Box
+          style={{
+            marginTop: '25px',
+            overflow: 'hidden',
+            borderRadius: '12px',
+          }}>
+          <ReactPlayer url="/videos/01.mp4" width="100%" height="100%" controls={true} className="react-player-custom" />
+        </Box>
+      );
+      // <img style={{ width: '100%', marginTop: '40px' }} src="/img/video.png" />;
     }
     default:
       break;

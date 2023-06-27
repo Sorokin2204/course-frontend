@@ -220,7 +220,7 @@ const NameBusinessEdit = () => {
         {getNameBusinessData?.map((cat) => (
           <>
             <Box sx={{ ...(activeCategory?.id === cat?.id && { color: 'primary.main', fontWeight: '700', textDecoration: 'underline', textDecorationThickness: '2px', textUnderlineOffset: '4px' }), whiteSpace: 'nowrap' }}>{cat?.name}</Box>
-            <Box sx={{ textAlign: 'center', whiteSpace: 'nowrap' }}>{getTypeBusinessData?.find((typeItem) => typeItem?.id == cat?.typeBusinessId).name}</Box>
+            <Box sx={{ textAlign: 'center', whiteSpace: 'nowrap' }}>{getTypeBusinessData?.find((typeItem) => typeItem?.id == cat?.typeBusinessId)?.name}</Box>
             <Box
               onClick={() => {
                 const findTypeBusiness = getTypeBusinessData?.find((typeItem) => typeItem?.id == cat?.typeBusinessId);

@@ -385,3 +385,6 @@ input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+.react-player-custom video {
+  display: block;
+}

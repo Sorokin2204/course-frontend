@@ -1032,6 +1032,7 @@ const CourseStart = () => {
       }, 500);
     }
   }, [getResultData]);
+
   useEffect(() => {
     if (getNameBusinessData && getTypeBusinessData && getTypeOfSaleData && getWhereSaleData) {
       let dataStepUpdate = dataStep;
@@ -1052,7 +1053,7 @@ const CourseStart = () => {
   const matches = useMediaQuery('(min-width:1100px)');
   return (
     <>
-      {!getResultLoading && (
+      {!getResultLoading && auth?.activeCourse && (
         <Box sx={{ paddingBottom: '44px', marginBottom: '40px' }}>
           <Box sx={{ display: 'flex', flexDirection: { mob: 'column', desk: 'row' }, alignItems: { mob: 'start', desk: 'center' } }}>
             <Box sx={{ marginBottom: { mob: '8px', desk: '0' }, fontWeight: '600', fontSize: { mob: '20px', desk: '24px' }, marginRight: { mob: '20px', desk: '25px' } }}>Аудит бизнеса</Box>

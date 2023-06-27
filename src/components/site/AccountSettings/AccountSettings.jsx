@@ -311,6 +311,7 @@ const AccountSettings = () => {
           <InputCustom
             size="small"
             rules={{
+              required: false,
               validate: (val) => {
                 if (settingForm.watch('password') != val) {
                   return 'Your passwords do no match';
