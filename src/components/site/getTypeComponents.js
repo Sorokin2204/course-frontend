@@ -3,7 +3,7 @@ import InputCustom from './InputCustom/InputCustom';
 import RatingBlock from './RatingBlock';
 import ReactPlayer from 'react-player';
 
-export const getTypeComponents = ({ valueStatus, status, fields, title, name, type, value, avatar }, form, activeSteps, activeIndex, index) => {
+export const getTypeComponents = ({ valueStatus, status, fields, title, name, type, value, avatar, src }, form, activeSteps, activeIndex, index) => {
   switch (type) {
     case 'title':
       return <Box sx={{ fontWeight: '600', fontSize: { mob: '14px', desk: '16px' } }}>{value}</Box>;
@@ -86,7 +86,7 @@ export const getTypeComponents = ({ valueStatus, status, fields, title, name, ty
             overflow: 'hidden',
             borderRadius: '12px',
           }}>
-          <ReactPlayer url="/videos/01.mp4" width="100%" height="100%" controls={true} className="react-player-custom" />
+          <ReactPlayer url={src} width="100%" height="100%" controls={true} className="react-player-custom" />
         </Box>
       );
       // <img style={{ width: '100%', marginTop: '40px' }} src="/img/video.png" />;

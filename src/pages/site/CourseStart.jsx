@@ -18,19 +18,6 @@ import { getWhereSale } from '../../redux/actions/data/getWhereSale';
 import { upsertResult } from '../../redux/actions/user/upsertResult';
 import { getResult } from '../../redux/actions/user/getResult';
 import { NumericFormat } from 'react-number-format';
-const duration = 300;
-
-const defaultStyle = {
-  transition: `opacity ${duration}ms ease-in-out`,
-  opacity: 0,
-};
-
-const transitionStyles = {
-  entering: { opacity: 1 },
-  entered: { opacity: 1 },
-  exiting: { opacity: 0 },
-  exited: { opacity: 0 },
-};
 
 const dataStepDefault = [
   {
@@ -38,6 +25,7 @@ const dataStepDefault = [
     value: `Анықтама! 
 Бұл формула СНГ бойынша ТОП-150 компаниялардың бойынан практикадан өткен универсалды авторлық бизнес-аналитикаға арналған инструмент(10 млн, 100 млн, 1 млрд, 15 млрд тіпті 1 трлн обороты бар компаниялардан өткен формула).`,
   },
+  { type: 'video', src: 'https://www.youtube.com/watch?v=bJWkoVTlXRQ&ab_channel=MBusiness' },
   {
     type: 'chat-self',
     avatar: 'https://i.pravatar.cc/32',
@@ -523,10 +511,6 @@ const dataStepDefault = [
       return <>Рахмет, осымен диагностика аяқталды, төменде диагностиканың жауабын қараңыз және видеороликтерді қарауды ұмытпаңыз</>;
     },
   },
-
-  // {
-  //   type: 'video',
-  // },
   {
     type: 'chat-self',
     avatar: 'https://i.pravatar.cc/32',
@@ -537,7 +521,21 @@ const dataStepDefault = [
     type: 'chapter-end',
   },
 ];
-
+const dataVideoResult = [
+  { type: 'video', src: 'https://www.youtube.com/watch?v=l4IB2-uTtPw&ab_channel=MBusiness' },
+  { type: 'video', src: 'https://www.youtube.com/watch?v=CwTesKkd3vI&ab_channel=MBusiness' },
+  { type: 'video', src: 'https://www.youtube.com/watch?v=MVmZsJFiysU&ab_channel=MBusiness' },
+  { type: 'video', src: 'https://www.youtube.com/watch?v=gZ2-83Lfscs&ab_channel=MBusiness' },
+  { type: 'video', src: 'https://www.youtube.com/watch?v=l7DaOl93drk&ab_channel=MBusiness' },
+  { type: 'video', src: 'https://www.youtube.com/watch?v=f_tOriWBHb0&ab_channel=MBusiness' },
+  { type: 'video', src: 'https://www.youtube.com/watch?v=7ZVIBsjmH_I&ab_channel=MBusiness' },
+  { type: 'video', src: 'https://www.youtube.com/watch?v=Zszy1-u78g4&ab_channel=MBusiness' },
+  { type: 'video', src: 'https://www.youtube.com/watch?v=QdyytYVaVzA&ab_channel=MBusiness' },
+  { type: 'video', src: 'https://www.youtube.com/watch?v=XE5_-QgBygs&ab_channel=MBusiness' },
+  { type: 'video', src: 'https://www.youtube.com/watch?v=1d1cZku7pA4&ab_channel=MBusiness' },
+  { type: 'video', src: 'https://www.youtube.com/watch?v=wfDqibKr3OU&ab_channel=MBusiness' },
+  { type: 'video', src: 'https://www.youtube.com/watch?v=4P8n9OVGGb0&ab_channel=MBusiness' },
+];
 const getCheckupData = (form, isSecond = false) => {
   const turnoverValueSource = parseInt(form.getValues('turnover'));
   const restOfGoodsValue = parseInt(form.getValues('restOfGoods'));
@@ -1042,12 +1040,12 @@ const CourseStart = () => {
   useEffect(() => {
     if (getNameBusinessData && getTypeBusinessData && getTypeOfSaleData && getWhereSaleData) {
       let dataStepUpdate = dataStep;
-      dataStepUpdate[4].fields[7].options = getTypeBusinessData?.map((itemTypeBusiness) => ({
+      dataStepUpdate[5].fields[7].options = getTypeBusinessData?.map((itemTypeBusiness) => ({
         label: itemTypeBusiness?.name,
         options: getNameBusinessData?.filter((itemNameBusiness) => itemNameBusiness?.typeBusinessId == itemTypeBusiness?.id)?.map((itemNameBusiness) => ({ margin: itemTypeBusiness?.margin, value: itemNameBusiness?.id, label: itemNameBusiness?.name })),
       }));
-      dataStepUpdate[4].fields[8].options = getTypeOfSaleData?.map((itemTypeOfSale) => ({ value: itemTypeOfSale?.id, label: itemTypeOfSale?.name }));
-      dataStepUpdate[4].fields[9].options = [
+      dataStepUpdate[5].fields[8].options = getTypeOfSaleData?.map((itemTypeOfSale) => ({ value: itemTypeOfSale?.id, label: itemTypeOfSale?.name }));
+      dataStepUpdate[5].fields[9].options = [
         { label: 'Онлайн', options: getWhereSaleData?.filter((itemWhereSale) => itemWhereSale?.isOnline)?.map((itemWhereSale) => ({ label: itemWhereSale?.name, value: itemWhereSale?.id })) },
         { label: 'Оффлайн', options: getWhereSaleData?.filter((itemWhereSale) => !itemWhereSale?.isOnline)?.map((itemWhereSale) => ({ label: itemWhereSale?.name, value: itemWhereSale?.id })) },
       ];
@@ -1203,8 +1201,12 @@ const CourseStart = () => {
                   <Box sx={{ minHeight: '57px', padding: '15px 18px', marginTop: '25px', background: 'rgba(66, 130, 225, 0.15)', borderRadius: '6px' }}>{itemResult?.text || ''} </Box>
                 </Box>
               ))}
+              {dataVideoResult?.map((itemVideo) => (
+                <Box sx={{ marginTop: '20px' }}>{getTypeComponents(itemVideo)}</Box>
+              ))}
             </>
           )}
+
           <Box ref={myRef}></Box>
         </Box>
       )}

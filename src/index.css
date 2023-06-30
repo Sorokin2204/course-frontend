@@ -385,6 +385,7 @@ input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-.react-player-custom video {
+.react-player-custom iframe {
   display: block;
+  aspect-ratio: 16/ 9;
 }
